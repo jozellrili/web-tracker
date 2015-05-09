@@ -9,15 +9,19 @@ function get_links($url) {
 	$regexp = "<a\s[^>]*href=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
 	preg_match_all("/$regexp/siU",$input, $matches);
 	
-	/* echo "<pre>";
-	print_r($matches[2]);
-	echo "</pre>"; 
-	*/
-	
 	$l = $matches[2];
 	
 	foreach($l as $link) {
+		
 		echo $link."<br />";
+		
+		if (strpos($link, "#")) {
+			$link = substr($link, 0 , strpos($link, "#"));
+		}
+		 
+		if (substr($link,0,1) == ".") {
+			$link = substr($link, 1);
+		}
 	}
 }
 
