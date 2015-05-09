@@ -1,0 +1,31 @@
+/*Web Crawler */
+body {
+ overflow-x: hidden;
+}
+/*Content */
+.content-section-a {
+	margin-top: 40px;
+}
+
+/*Banner*/
+.home-banner {
+  margin-top: 65px;
+  text-align: center;
+  background: url(../img/spy.png) no-repeat center center;
+  /*background-size: cover;*/
+  padding-bottom: 165px;
+  max-height: 30%;
+}
+/*image*/
+.img-responsive {
+	margin-top: -6px;
+}
+/*Form*/
+.form {
+	margin-top: 13px;
+}
+/*Links*/
+a {
+	color: #333;
+}
+
