@@ -13,7 +13,7 @@ function get_links($url) {
 	
 	foreach($l as $link) {
 		
-		echo $link."<br />";
+		
 		
 		if (strpos($link, "#")) {
 			$link = substr($link, 0 , strpos($link, "#"));
@@ -22,6 +22,9 @@ function get_links($url) {
 		if (substr($link,0,1) == ".") {
 			$link = substr($link, 1);
 		}
+		
+		echo $link."<br />";
+
 	}
 }
 
