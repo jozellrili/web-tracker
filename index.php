@@ -92,8 +92,7 @@ function get_domain($url)
 }
 
 foreach ($c as $domain) {
-	print get_domain($domain)."<br />";
-
+	print get_domain($c);
 }
 
 
