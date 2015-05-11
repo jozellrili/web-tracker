@@ -1,3 +1,12 @@
+<<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+</style>
+</head>
+<body>
+
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -63,17 +72,12 @@ function get_links($url) {
 }
 	
 get_links($to_crawl);
-echo "ARRAY <br />";
+//echo "ARRAY <br />";
 foreach ($c as $page) {
 	# code...
 	get_links($page);
 	//echo $page."<br />";
 }
-foreach ($c as $page) {
-	# code...
-	echo $page."<br />";
-}
-
 
 
 function get_domain($url)
@@ -91,8 +95,30 @@ function get_domain($url)
     return $host;
 }
 
-foreach ($c as $domain) {
-	print get_domain($to_crawl)."<br />";
-}
 
 
+
+	echo "<table class = 'table table-striped'>";
+	echo "<tbody>";
+	echo "<tr>";
+	echo "<th>#</th><th>DOMAIN NAME</th><th>URL</th>";
+	echo "</tr>";
+foreach ($c as $page) {
+	echo "<tr>";
+	echo "<td >".get_domain($to_crawl)."</td><td>".$page;
+	echo "</td>";
+
+	echo "</tr>";
+	}
+	// foreach ($c as $domain) {
+	// echo "<tr>";
+	// echo "<td>".get_domain($to_crawl);
+	// echo "</td>";
+	// echo "</tr>";
+	// }
+	echo "</tbody>";
+	echo "</table>";
+
+?>
+</body>
+</html>
