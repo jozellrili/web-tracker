@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 
-$to_crawl = "http://animefreak.tv";
+$to_crawl = "https://bestspace.co";
 $c = array();
 
 function get_links($url) {
@@ -54,14 +54,26 @@ function get_links($url) {
 				$link = "http://".$link;
 			}
 		}
-
+		//echo $link."<br/>";
+		if (!in_array($link, $c)) {
+			array_push($c, $link);
+		}
 		
-		echo $link."<br/>";
-		
-
 	}
 }
 	
 get_links($to_crawl);
+echo "ARRAY <br />";
+foreach ($c as $page) {
+	# code...
+	get_links($page);
+	//echo $page."<br />";
+}
+foreach ($c as $page) {
+	# code...
+	echo $page."<br />";
+}
+
+
 
 
