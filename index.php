@@ -76,4 +76,24 @@ foreach ($c as $page) {
 
 
 
+function get_domain($url)
+{
+    $host = @parse_url($url, PHP_URL_HOST);
+    if (!$host)
+        $host = $url;
+
+    if (substr($host, 0, 4) == "www.")
+        $host = substr($host, 4);
+
+    if (strlen($host) > 50)
+        $host = substr($host, 0, 47) . '...';
+
+    return $host;
+}
+
+foreach ($c as $domain) {
+	print get_domain($domain)."<br />";
+
+}
+
 
