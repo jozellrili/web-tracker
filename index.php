@@ -96,25 +96,36 @@ function get_domain($url)
     return $host;
 }
 
+
+function content_type($url) {
+
+	$ch = curl_init($url);
+	curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1) ;
+	$content = curl_exec($ch);
+	if(!curl_errno($ch))
+		{
+			$info = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+			
+		}
+return $info;
+curl_close($ch);
+
+}
+
+
 	echo "<table class = 'table table-striped'>";
 	echo "<tbody>";
 	echo "<tr>";
-	echo "<th>#</th><th>DOMAIN NAME</th><th>URL</th>";
+	echo "<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th>URL</th>";
 	echo "</tr>";
 foreach ($c as $page) {
 	$i++;
 	echo "<tr>";
-	echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".$page;
+	echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".content_type($to_crawl)."</td><td>".$page;
 	echo "</td>";
 
 	echo "</tr>";
 	}
-	// foreach ($c as $domain) {
-	// echo "<tr>";
-	// echo "<td>".get_domain($to_crawl);
-	// echo "</td>";
-	// echo "</tr>";
-	// }
 	echo "</tbody>";
 	echo "</table>";
 
