@@ -1,8 +1,13 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 
 $to_crawl = "http://animefreak.tv";
-	
+$c = array();
+
 function get_links($url) {
+	global $c;
 	$input  = @file_get_contents($url);
 	$regexp = "<a\s[^>]*href=(\"??)([^\">]*?)\\1[^>]*>(.*)<\/a>";
 	preg_match_all("/$regexp/siU", $input, $matches);
@@ -40,8 +45,19 @@ function get_links($url) {
 				$link = $base_url.$link;
 			}
 		}
+
+		if (substr($link, 0, 7) != "http://" && substr($link, 0, 8) != "https://" && substr($link, 0, 1) != "[") {
+			if (substr($link, 0, 8) == "https://") {
+				$link = "https://".$link;
+			}
+			else {
+				$link = "http://".$link;
+			}
+		}
+
 		
 		echo $link."<br/>";
+		
 
 	}
 }
