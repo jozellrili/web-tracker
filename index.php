@@ -92,7 +92,7 @@ function get_domain($url)
 }
 
 foreach ($c as $domain) {
-	print get_domain($c);
+	print get_domain($to_crawl)."<br />";
 }
 
 
