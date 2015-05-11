@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<title></title>
@@ -14,6 +14,7 @@ ini_set('display_errors', '1');
 
 $to_crawl = "https://bestspace.co";
 $c = array();
+$i = 0;
 
 function get_links($url) {
 	global $c;
@@ -95,17 +96,15 @@ function get_domain($url)
     return $host;
 }
 
-
-
-
 	echo "<table class = 'table table-striped'>";
 	echo "<tbody>";
 	echo "<tr>";
 	echo "<th>#</th><th>DOMAIN NAME</th><th>URL</th>";
 	echo "</tr>";
 foreach ($c as $page) {
+	$i++;
 	echo "<tr>";
-	echo "<td >".get_domain($to_crawl)."</td><td>".$page;
+	echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".$page;
 	echo "</td>";
 
 	echo "</tr>";
