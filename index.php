@@ -12,7 +12,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 
-$to_crawl = "https://bestspace.co";
+$to_crawl = "http://www.cnn.com";
 $c = array();
 $i = 0;
 
@@ -121,7 +121,7 @@ curl_close($ch);
 foreach ($c as $page) {
 	$i++;
 	echo "<tr>";
-	echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".content_type($to_crawl)."</td><td>".$page;
+	echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".content_type($page)."</td><td>".$page;
 	echo "</td>";
 
 	echo "</tr>";
