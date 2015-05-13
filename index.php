@@ -53,12 +53,22 @@
             <div class="col-md-offset-2">
     			
     			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-                    Input a URL:
-                    <input type="text" name="url" id="url" placeholder="Type a URL here..">
-                    <input type="submit" name="submit" class="btn btn-primary" value="crawl">
+                   <label class="control-label col-sm-1">URL:</label>
+                    <div class="col-sm-7">          
+                    <input type="text" name="url" id="url" class="form-control" placeholder="http://www.example.com">
+                    </div>
+                    <input type="submit" name="submit" class="btn btn-primary" value="Start Crawling">
                 </form>
-
-				<?php
+                <div class="form col-md-7">
+                <h4>The URL's you submit for crawling are recorded.</h4>
+                <p>See All Crawled URL's <a href="">here.</a></p>
+           		</div>
+            <!-- <div class="form col-md-7">
+                <h4>The URL's you submit for crawling are recorded.</h4>
+                <p>See All Crawled URL's <a href="">here.</a></p>
+            </div> -->
+            </div>
+            	<?php
 				error_reporting(E_ALL);
 				ini_set('display_errors', '1');
 
@@ -164,15 +174,18 @@
 					function content_type($url) {
 
 						$ch = curl_init($url);
+						//curl_setopt($ch, CURLOPT_HEADER, 0);
 						curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1) ;
+						//curl_setopt($ch, CURLOPT_URL, $url);
+    					//curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 						$content = curl_exec($ch);
 						if(!curl_errno($ch))
 							{
 								$info = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 								
 							}
-					return $info;
-					curl_close($ch);
+						curl_close($ch);
+						return $info;
 
 					}
 
@@ -180,7 +193,7 @@
 						echo "<table class = 'table table-striped'>";
 						echo "<tbody>";
 						echo "<tr>";
-						echo "<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th>URL</th>";
+						echo "<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th>URL</th><th>STATUS</th>";
 						echo "</tr>";
 						foreach ($c as $page) {
 						$i++;
@@ -196,14 +209,6 @@
 				}
 
 				?>
-
-
-          
-            <!-- <div class="form col-md-7">
-                <h4>The URL's you submit for crawling are recorded.</h4>
-                <p>See All Crawled URL's <a href="">here.</a></p>
-            </div> -->
-            </div>
         </div>  
     </div>     
 </div>
