@@ -147,20 +147,17 @@
 					get_links($to_crawl);
 
 
-					function get_domain($url)
-					{
-					    $host = @parse_url($url, PHP_URL_HOST);
-					    if (!$host)
-					        $host = $url;
+					function get_domain($url) {
 
-					    if (substr($host, 0, 4) == "www.")
+						$host = @parse_url($url, PHP_URL_HOST);
+
+						if (substr($host, 0, 4) == "www.") {
 					        $host = substr($host, 4);
+						}
 
-					    if (strlen($host) > 50)
-					        $host = substr($host, 0, 47) . '...';
-
-					    return $host;
+						return $host;
 					}
+
 
 
 					function content_type($url) {
