@@ -86,7 +86,6 @@
 					$url = $_POST['url'];
 
 					$to_crawl = $_POST['url'];
-					//"http://www.cnn.com";
 					$c = array();
 					$i = 0;
 
@@ -138,7 +137,6 @@
 									$link = "http://".$link;
 								}
 							}
-							//echo $link."<br/>";
 							if (!in_array($link, $c)) {
 								array_push($c, $link);
 							}
@@ -147,12 +145,6 @@
 					}
 						
 					get_links($to_crawl);
-					//echo "ARRAY <br />";
-					foreach ($c as $page) {
-						# code...
-						get_links($page);
-						//echo $page."<br />";
-					}
 
 
 					function get_domain($url)
@@ -174,18 +166,18 @@
 					function content_type($url) {
 
 						$ch = curl_init($url);
-						//curl_setopt($ch, CURLOPT_HEADER, 0);
+
 						curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1) ;
-						//curl_setopt($ch, CURLOPT_URL, $url);
-    					//curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 						$content = curl_exec($ch);
 						if(!curl_errno($ch))
 							{
 								$info = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+								return $info;
 								
 							}
+
 						curl_close($ch);
-						return $info;
+						
 
 					}
 
