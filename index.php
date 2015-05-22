@@ -149,14 +149,18 @@
 
 					function get_domain($url) {
 
+
 						$host = @parse_url($url, PHP_URL_HOST);
 
 						if (substr($host, 0, 4) == "www.") {
 					        $host = substr($host, 4);
 						}
 
+						$theHost = $host;
 						return $host;
 					}
+
+					$theHost = get_domain($to_crawl);
 
 
 
@@ -178,6 +182,22 @@
 
 					}
 
+					function classification($domain,$url) {
+		
+						if (preg_match("/\b$domain\b/i", $url, $match)) {
+			  				$status = "This is Safe";
+						}
+						else {
+							$status = "Potential Tracker!"; 
+						}
+
+						return $status;
+
+					}
+
+		//classification(get_domain($to_crawl), $to_crawl);
+					var_dump($theHost);
+
 
 						echo "<table class = 'table table-striped'>";
 						echo "<tbody>";
@@ -187,7 +207,7 @@
 						foreach ($c as $page) {
 						$i++;
 						echo "<tr>";
-						echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".content_type($page)."</td><td>".$page;
+						echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".content_type($page)."</td><td>".$page."</td><td>".classification($theHost, $page);
 						echo "</td>";
 
 						echo "</tr>";
