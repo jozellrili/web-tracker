@@ -57,7 +57,7 @@
                     <div class="col-sm-7">          
                     <input type="text" name="url" id="url" class="form-control" placeholder="http://www.example.com">
                     </div>
-                    <input type="submit" name="submit" class="btn btn-primary" value="Start Crawling">
+                    <input type="submit" name="submit" class="btn btn-danger" value="Start Crawling">
                 </form>
                 <div class="form col-md-7">
                 <h4>The URL's you submit for crawling are recorded.</h4>
@@ -89,62 +89,99 @@
 					$c = array();
 					$i = 0;
 
-					function get_links($url) {
+					function get_links($url)
+					{	
 						global $c;
-						$input  = @file_get_contents($url);
-						$regexp = "<a\s[^>]*href=(\"??)([^\">]*?)\\1[^>]*>(.*)<\/a>";
-						preg_match_all("/$regexp/siU", $input, $matches);
+						$doc = new DOMDocument();
+						libxml_use_internal_errors(true);
+						$doc->loadHTMLFile($url);
+						libxml_clear_errors();
 						$base_url = parse_url($url, PHP_URL_HOST);
-						$l = $matches[2];
-						
-						foreach($l as $link) {
-							
-							if (strpos($link, "#")) {
-								$link = substr($link, 0, strpos($link, "#"));
-							}
-							if (substr($link,0,1) == ".") {
-								$link = substr($link, 1);
-							}
-							if (substr($link,0,7) == "http://") {
-								$link = $link;
-							}
-							else if (substr($link,0,8) == "https://") {
-								$link = $link;
-							}
-							else if (substr($link,0,2) == "//") {
-								$link = substr($link, 2);
-							}
-							else if (substr($link,0,1) == "#") {
-								$link = $url;
-							}
-							else if (substr($link,0,7) == "mailto:") {
-								$link = "[".$link."]";
+					// fetching all stylesheet
+					foreach( $doc->getElementsByTagName('link') as $style){
+					   
+					    $href =  $style->getAttribute('href');
+					    //var_dump($href);
+
+					       if (!in_array($href, $c)) {
+							array_push($c, $href);
+						 }					
+					}
+
+					// fetching all href
+					foreach( $doc->getElementsByTagName('a') as $a){
+					   
+					    $href =  $a->getAttribute('href');
+					    //var_dump($href);
+					 
+						if (strpos($href, "#")) {
+							$href = substr($href, 0, strpos($href, "#"));
+						}
+						if (substr($href,0,1) == ".") {
+							$href = substr($href, 1);
+						}
+						if (substr($href,0,7) == "http://") {
+							$href = $href;
+						}
+						else if (substr($href,0,8) == "https://") {
+							$href = $href;
+						}
+						else if (substr($href,0,2) == "//") {
+							$href = substr($href, 2);
+						}
+						else if (substr($href,0,1) == "#") {
+							$href = $url;
+						}
+						else if (substr($href,0,7) == "mailto:") {
+							$href = "[".$href."]";
+						}
+						else {
+							if (substr($href, 0, 1) != "/") {
+								$href = $base_url."/".$href;
 							}
 							else {
-								if (substr($link, 0, 1) != "/") {
-									$link = $base_url."/".$link;
+								$href = $base_url.$href;
 								}
-								else {
-									$link = $base_url.$link;
-								}
-							}
+						}	
 
-							if (substr($link, 0, 7) != "http://" && substr($link, 0, 8) != "https://" && substr($link, 0, 1) != "[") {
-								if (substr($link, 0, 8) == "https://") {
-									$link = "https://".$link;
-								}
-								else {
-									$link = "http://".$link;
-								}
+						if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
+							if (substr($href, 0, 8) == "https://") {
+								$href = "https://".$href;
 							}
-							if (!in_array($link, $c)) {
-								array_push($c, $link);
+							else {
+								$href = "http://".$href;
 							}
-							
 						}
+						if (!in_array($href, $c)) {
+							array_push($c, $href);
+						 }			   
+					}
+					// fetching all image
+					foreach( $doc->getElementsByTagName('img') as $image){
+					  
+					    $href =  $image->getAttribute('src');
+					    //var_dump($href);
+					  	if (!in_array($href, $c)) {
+							array_push($c, $href);
+						 }						
+					}
+
+					// fetching all script
+					foreach( $doc->getElementsByTagName('script') as $scripts){
+						
+					    $href =  $scripts->getAttribute('src');
+					    //var_dump($href);
+							if (substr($href,0,2) == "//") {
+							$href = substr($href, 2);
+						}
+					     if (!in_array($href, $c)) {
+							array_push($c, $href);
+						 }									
 					}
 						
-					get_links($to_crawl);
+					}
+
+					get_links($url);
 
 
 					function get_domain($url) {
@@ -164,23 +201,23 @@
 
 
 
-					function content_type($url) {
+					// function content_type($url) {
 
-						$ch = curl_init($url);
+					// 	$ch = curl_init($url);
 
-						curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1) ;
-						$content = curl_exec($ch);
-						if(!curl_errno($ch))
-							{
-								$info = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-								return $info;
+					// 	curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1) ;
+					// 	$content = curl_exec($ch);
+					// 	if(!curl_errno($ch))
+					// 		{
+					// 			$info = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+					// 			return $info;
 								
-							}
+					// 		}
 
-						curl_close($ch);
+					// 	curl_close($ch);
 						
 
-					}
+					// }
 
 					function classification($domain,$url) {
 		
@@ -207,7 +244,7 @@
 						foreach ($c as $page) {
 						$i++;
 						echo "<tr>";
-						echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".content_type($page)."</td><td>".$page."</td><td>".classification($theHost, $page);
+						echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".$page."</td><td>".classification($theHost, $page);
 						echo "</td>";
 
 						echo "</tr>";
