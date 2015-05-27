@@ -69,6 +69,8 @@
             </div> -->
             </div>
             	<?php
+				include('db_connection.php');
+
 				error_reporting(E_ALL);
 				ini_set('display_errors', '1');
 
@@ -97,11 +99,11 @@
 						$doc->loadHTMLFile($url);
 						libxml_clear_errors();
 						$base_url = parse_url($url, PHP_URL_HOST);
+						
 					// fetching all stylesheet
 					foreach( $doc->getElementsByTagName('link') as $style){
 					   
 					    $href =  $style->getAttribute('href');
-					    //var_dump($href);
 
 					       if (!in_array($href, $c)) {
 							array_push($c, $href);
@@ -112,7 +114,6 @@
 					foreach( $doc->getElementsByTagName('a') as $a){
 					   
 					    $href =  $a->getAttribute('href');
-					    //var_dump($href);
 					 
 						if (strpos($href, "#")) {
 							$href = substr($href, 0, strpos($href, "#"));
@@ -160,7 +161,6 @@
 					foreach( $doc->getElementsByTagName('img') as $image){
 					  
 					    $href =  $image->getAttribute('src');
-					    //var_dump($href);
 					  	if (!in_array($href, $c)) {
 							array_push($c, $href);
 						 }						
@@ -170,7 +170,6 @@
 					foreach( $doc->getElementsByTagName('script') as $scripts){
 						
 					    $href =  $scripts->getAttribute('src');
-					    //var_dump($href);
 							if (substr($href,0,2) == "//") {
 							$href = substr($href, 2);
 						}
@@ -201,23 +200,23 @@
 
 
 
-					// function content_type($url) {
+					function content_type($url) {
 
-					// 	$ch = curl_init($url);
+						$ch = curl_init($url);
 
-					// 	curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1) ;
-					// 	$content = curl_exec($ch);
-					// 	if(!curl_errno($ch))
-					// 		{
-					// 			$info = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-					// 			return $info;
+						curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1) ;
+						$content = curl_exec($ch);
+						if(!curl_errno($ch))
+							{
+								$info = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+								return $info;
 								
-					// 		}
+							}
 
-					// 	curl_close($ch);
+						curl_close($ch);
 						
 
-					// }
+					}
 
 					function classification($domain,$url) {
 		
@@ -232,26 +231,42 @@
 
 					}
 
-		//classification(get_domain($to_crawl), $to_crawl);
-					var_dump($theHost);
-
 
 						echo "<table class = 'table table-striped'>";
 						echo "<tbody>";
 						echo "<tr>";
-						echo "<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th>URL</th><th>STATUS</th>";
+						echo "<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th>URL</th><th>STATUS</th><th>Existing in DB?</th>";
 						echo "</tr>";
 						foreach ($c as $page) {
 						$i++;
+
+
+							$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
+							$result = $conn->query($sql);
+
+							if ($result->num_rows > 0) {
+							    // output data of each row
+							    while($row = $result->fetch_assoc()) {
+							    //     echo $row["id"]. " -> " . $row["domain"]. " 	" . $row["url"]. "		" . $row["type"] . "<br>";
+							    	$a = "Yes!";
+							    }
+							} else {
+							    $a = "No. Add it to list";
+							}
+
 						echo "<tr>";
-						echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".$page."</td><td>".classification($theHost, $page);
+						echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".content_type($page)."</td><td>".$page."</td><td>".classification($theHost, $page);
+						echo "</td><td>".$a;
 						echo "</td>";
 
 						echo "</tr>";
 						}
 						echo "</tbody>";
 						echo "</table>";
+
+					//isset child else	
 					}
+				//eof	
 				}
 
 				?>
