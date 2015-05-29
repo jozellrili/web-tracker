@@ -204,17 +204,17 @@
 
 						$ch = curl_init($url);
 
-						curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1) ;
-						$content = curl_exec($ch);
+						curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+						curl_exec($ch);
+
 						if(!curl_errno($ch))
 							{
-								$info = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-								return $info;
+								$info = curl_getinfo($ch);
+								return $info['content_type'];
 								
 							}
 
 						curl_close($ch);
-						
 
 					}
 
@@ -246,16 +246,16 @@
 
 							if ($result->num_rows > 0) {
 							    // output data of each row
-							    while($row = $result->fetch_assoc()) {
-							    //     echo $row["id"]. " -> " . $row["domain"]. " 	" . $row["url"]. "		" . $row["type"] . "<br>";
+							    while($row = $result->fetch_array()) {
 							    	$a = "Yes!";
 							    }
 							} else {
-							    $a = "No. Add it to list";
+							        $a = "No. Add it to list";
 							}
 
 						echo "<tr>";
-						echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".content_type($page)."</td><td>".$page."</td><td>".classification($theHost, $page);
+						echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".$page."</td><td>".classification($theHost, $page);
+						echo "</td><td>".content_type($page);
 						echo "</td><td>".$a;
 						echo "</td>";
 
