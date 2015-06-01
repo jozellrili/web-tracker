@@ -221,7 +221,7 @@
 					function classification($domain,$url) {
 		
 						if (preg_match("/\b$domain\b/i", $url, $match)) {
-			  				$status = "This is Safe";
+			  				$status = "Safe URL";
 						}
 						else {
 							$status = "Potential Tracker!"; 
@@ -231,7 +231,6 @@
 
 					}
 
-
 						echo "<table class = 'table table-striped'>";
 						echo "<tbody>";
 						echo "<tr>";
@@ -239,23 +238,36 @@
 						echo "</tr>";
 						foreach ($c as $page) {
 						$i++;
-
+							
+							$url_stat = classification($theHost, $page);
+							
+								if ((substr($page,0,7) == "http://")) {
+									$page = substr($page, 7);
+								} else if ((substr($page,0,8) == "https://")){
+									$page = substr($page, 8);
+									}
 
 							$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 							$result = $conn->query($sql);
 
 							if ($result->num_rows > 0) {
-							    // output data of each row
-							    while($row = $result->fetch_array()) {
-							    	$a = "Yes!";
-							    }
+							// output data of each row
+								//while($row = $result->fetch_assoc()) {
+									$a = "Existing in the database";
+								//}
 							} else {
-							        $a = "No. Add it to list";
+								if ($url_stat == "Potential Tracker!") {
+									$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theHost."', '".$page."', 'TBD')");
+									$a = "Added to the database!";
+								}
+								else {
+									$a = "Do nothing";
+								}
 							}
 
 						echo "<tr>";
-						echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>".$page."</td><td>".classification($theHost, $page);
-						echo "</td><td>".content_type($page);
+						echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>"."null"."</td><td>".$page."</td><td>".classification($theHost, $page);
+						//echo "</td><td>".content_type($page);
 						echo "</td><td>".$a;
 						echo "</td>";
 
