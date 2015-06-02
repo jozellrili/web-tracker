@@ -70,7 +70,7 @@
             </div>
             	<?php
 				include('db_connection.php');
-				//$conn->query("TRUNCATE TABLE dummy");
+				
 
 				error_reporting(E_ALL);
 				ini_set('display_errors', '1');
@@ -225,13 +225,16 @@
 					function classification($domain,$url) {
 		
 						if (preg_match("/\b$domain\b/i", $url, $match)) {
-			  				$status = "Safe URL";
+			  				//Safe URL
+			  				$icon = "fa fa-check-square fa-lg";
 						}
 						else {
-							$status = "Potential Tracker!"; 
+							//Potential Tracker!
+							$icon = "fa fa-exclamation-triangle fa-lg";
 						}
 
-						return $status;
+
+						return $icon;
 
 					}
 
@@ -242,6 +245,14 @@
 						echo "</tr>";
 						foreach ($c as $page) {
 						$i++;
+						$theDomain = get_domain($page);
+						$icon = classification($theHost, $page);
+							if ($icon == "fa fa-check-square fa-lg") {
+								$color = "green";
+							}
+							else {
+								$color = "red";
+							}
 							
 							$url_stat = classification($theHost, $page);
 							
@@ -256,12 +267,10 @@
 
 							if ($result->num_rows > 0) {
 							// output data of each row
-								//while($row = $result->fetch_assoc()) {
 									$a = "Existing in the database";
-								//}
 							} else {
 								if ($url_stat == "Potential Tracker!") {
-									$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theHost."', '".$page."', 'TBD')");
+									$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$page."', 'TBD')");
 									$a = "Added to the database!";
 								}
 								else {
@@ -270,7 +279,7 @@
 							}
 
 						echo "<tr>";
-						echo "<td >".$i."</td><td>".get_domain($url)."</td><td>"."null"."</td><td>".$page."</td><td>".classification($theHost, $page);
+						echo "<td >".$i."</td><td>".get_domain($url)."</td><td>"."null"."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
 						//echo "</td><td>".content_type($page);
 						echo "</td><td>".$a;
 						echo "</td>";
