@@ -70,7 +70,7 @@
             </div>
             	<?php
 				include('db_connection.php');
-				
+
 
 				error_reporting(E_ALL);
 				ini_set('display_errors', '1');
@@ -225,18 +225,17 @@
 					function classification($domain,$url) {
 		
 						if (preg_match("/\b$domain\b/i", $url, $match)) {
-			  				//Safe URL
-			  				$icon = "fa fa-check-square fa-lg";
-						}
+			  				$status = "Safe URL";
+			  			}
+			  				
 						else {
-							//Potential Tracker!
-							$icon = "fa fa-exclamation-triangle fa-lg";
+							$status = "Potential Tracker";
 						}
 
-
-						return $icon;
+						return $status;
 
 					}
+
 
 						echo "<table class = 'table table-striped'>";
 						echo "<tbody>";
@@ -246,41 +245,43 @@
 						foreach ($c as $page) {
 						$i++;
 						$theDomain = get_domain($page);
-						$icon = classification($theHost, $page);
-							if ($icon == "fa fa-check-square fa-lg") {
+						$url_stat = classification($theHost, $page);
+							if ($url_stat == "Safe URL") {
+								$icon = "fa fa-check-square fa-lg";
 								$color = "green";
 							}
 							else {
+								$icon = "fa fa-exclamation-triangle fa-lg";
 								$color = "red";
 							}
 							
-							$url_stat = classification($theHost, $page);
 							
-								if ((substr($page,0,7) == "http://")) {
-									$page = substr($page, 7);
-								} else if ((substr($page,0,8) == "https://")){
-									$page = substr($page, 8);
-									}
+							
+							if ((substr($page,0,7) == "http://")) {
+								$page = substr($page, 7);
+							} else if ((substr($page,0,8) == "https://")){
+								$page = substr($page, 8);
+								}
 
 							$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 							$result = $conn->query($sql);
 
 							if ($result->num_rows > 0) {
 							// output data of each row
-									$a = "Existing in the database";
+									$a = "Yes";
 							} else {
-								if ($url_stat == "Potential Tracker!") {
+								if ($url_stat == "Potential Tracker") {
 									$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$page."', 'TBD')");
-									$a = "Added to the database!";
+									$a = "Tracker detected! Added to the database!";
 								}
 								else {
-									$a = "Do nothing";
+									$a = "This is safe. Do nothing";
 								}
 							}
 
 						echo "<tr>";
 						echo "<td >".$i."</td><td>".get_domain($url)."</td><td>"."null"."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
-						//echo "</td><td>".content_type($page);
+						//content_type($page);
 						echo "</td><td>".$a;
 						echo "</td>";
 
