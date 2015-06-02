@@ -70,6 +70,7 @@
             </div>
             	<?php
 				include('db_connection.php');
+				//$conn->query("TRUNCATE TABLE dummy");
 
 				error_reporting(E_ALL);
 				ini_set('display_errors', '1');
@@ -85,11 +86,14 @@
 					}
 					else {
 
-					$url = $_POST['url'];
-
-					$to_crawl = $_POST['url'];
 					$c = array();
 					$i = 0;
+
+					$url = $_POST['url'];
+
+						if ((substr($url,0,7) != "http://")) {
+							$url = "http://".$url;
+						}
 
 					function get_links($url)
 					{	
@@ -196,7 +200,7 @@
 						return $host;
 					}
 
-					$theHost = get_domain($to_crawl);
+					$theHost = get_domain($url);
 
 
 
@@ -266,7 +270,7 @@
 							}
 
 						echo "<tr>";
-						echo "<td >".$i."</td><td>".get_domain($to_crawl)."</td><td>"."null"."</td><td>".$page."</td><td>".classification($theHost, $page);
+						echo "<td >".$i."</td><td>".get_domain($url)."</td><td>"."null"."</td><td>".$page."</td><td>".classification($theHost, $page);
 						//echo "</td><td>".content_type($page);
 						echo "</td><td>".$a;
 						echo "</td>";
