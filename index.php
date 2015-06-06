@@ -56,6 +56,7 @@
                    <label class="control-label col-sm-1">URL:</label>
                     <div class="col-sm-7">          
                     <input type="text" name="url" id="url" class="form-control" placeholder="http://www.example.com">
+					 <button type="button" class="btn-link" onclick="loadXMLDoc()"><i><u>Advance Crawl</u></i></button>                
                     </div>
                     <input type="submit" name="submit" class="btn btn-danger" value="Start Crawling">
                 </form>
