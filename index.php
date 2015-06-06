@@ -306,6 +306,29 @@
 <!-- jQuery -->
 <script src="js/jquery.js"></script>
 
+<script>
+	function loadXMLDoc()
+	{
+	var xmlhttp;
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	    {
+	    document.getElementById("form").innerHTML=xmlhttp.responseText;
+	    }
+	  }
+	xmlhttp.open("POST","advance_crawl.php",true);
+	xmlhttp.send();
+	}
+	</script>
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
 
