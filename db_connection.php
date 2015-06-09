@@ -2,7 +2,7 @@
 
 $servername = "localhost";
 $username = "root";
-$password = "root";
+$password = "test123";
 $dbname = "tracker";
 
 // Create connection

@@ -56,7 +56,7 @@
                    <label class="control-label col-sm-1">URL:</label>
                     <div class="col-sm-7">          
                     <input type="text" name="url" id="url" class="form-control" placeholder="http://www.example.com">
-					 <button type="button" class="btn-link" ><i><u>Advance Crawl</u></i></button>                
+                    <button type="button" class="btn-link" ><i><u>Advance Crawl</u></i></button> 
                     </div>
                     <input type="submit" name="submit" class="btn btn-danger" value="Start Crawling">
                 </form>
@@ -64,10 +64,6 @@
                 <h4>The URL's you submit for crawling are recorded.</h4>
                 <p>See All Crawled URL's <a href="">here.</a></p>
            		</div>
-            <!-- <div class="form col-md-7">
-                <h4>The URL's you submit for crawling are recorded.</h4>
-                <p>See All Crawled URL's <a href="">here.</a></p>
-            </div> -->
             </div>
             	<?php
 				include('db_connection.php');
@@ -105,84 +101,85 @@
 						libxml_clear_errors();
 						$base_url = parse_url($url, PHP_URL_HOST);
 						
-					// fetching all stylesheet
-					foreach( $doc->getElementsByTagName('link') as $style){
+						// fetching all stylesheet
+						foreach( $doc->getElementsByTagName('link') as $style){
 					   
-					    $href =  $style->getAttribute('href');
+					    	$href =  $style->getAttribute('href');
 
-					       if (!in_array($href, $c)) {
+					        if (!in_array($href, $c)) {
 							array_push($c, $href);
-						 }					
-					}
+						 	}					
+						}
 
 					// fetching all href
-					foreach( $doc->getElementsByTagName('a') as $a){
-					   
-					    $href =  $a->getAttribute('href');
-					 
-						if (strpos($href, "#")) {
-							$href = substr($href, 0, strpos($href, "#"));
-						}
-						if (substr($href,0,1) == ".") {
-							$href = substr($href, 1);
-						}
-						if (substr($href,0,7) == "http://") {
-							$href = $href;
-						}
-						else if (substr($href,0,8) == "https://") {
-							$href = $href;
-						}
-						else if (substr($href,0,2) == "//") {
-							$href = substr($href, 2);
-						}
-						else if (substr($href,0,1) == "#") {
-							$href = $url;
-						}
-						else if (substr($href,0,7) == "mailto:") {
-							$href = "[".$href."]";
-						}
-						else {
-							if (substr($href, 0, 1) != "/") {
-								$href = $base_url."/".$href;
+						foreach( $doc->getElementsByTagName('a') as $a){
+						   
+						    $href =  $a->getAttribute('href');
+						 
+							if (strpos($href, "#")) {
+								$href = substr($href, 0, strpos($href, "#"));
+							}
+							if (substr($href,0,1) == ".") {
+								$href = substr($href, 1);
+							}
+							if (substr($href,0,7) == "http://") {
+								$href = $href;
+							}
+							else if (substr($href,0,8) == "https://") {
+								$href = $href;
+							}
+							else if (substr($href,0,2) == "//") {
+								$href = substr($href, 2);
+							}
+							else if (substr($href,0,1) == "#") {
+								$href = $url;
+							}
+							else if (substr($href,0,7) == "mailto:") {
+								$href = "[".$href."]";
 							}
 							else {
-								$href = $base_url.$href;
+								if (substr($href, 0, 1) != "/") {
+									$href = $base_url."/".$href;
 								}
-						}	
+								else {
+									$href = $base_url.$href;
+									}
+							}	
 
-						if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
-							if (substr($href, 0, 8) == "https://") {
-								$href = "https://".$href;
+							if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
+								if (substr($href, 0, 8) == "https://") {
+									$href = "https://".$href;
+								}
+								else {
+									$href = "http://".$href;
+								}
 							}
-							else {
-								$href = "http://".$href;
-							}
+							if (!in_array($href, $c)) {
+								array_push($c, $href);
+							 }			   
 						}
-						if (!in_array($href, $c)) {
-							array_push($c, $href);
-						 }			   
-					}
+
 					// fetching all image
-					foreach( $doc->getElementsByTagName('img') as $image){
-					  
-					    $href =  $image->getAttribute('src');
-					  	if (!in_array($href, $c)) {
-							array_push($c, $href);
-						 }						
-					}
+						foreach( $doc->getElementsByTagName('img') as $image){
+						  
+						    $href =  $image->getAttribute('src');
+						  	if (!in_array($href, $c)) {
+								array_push($c, $href);
+							 }						
+						}
 
 					// fetching all script
-					foreach( $doc->getElementsByTagName('script') as $scripts){
-						
-					    $href =  $scripts->getAttribute('src');
-							if (substr($href,0,2) == "//") {
-							$href = substr($href, 2);
+						foreach( $doc->getElementsByTagName('script') as $scripts){
+							
+						    $href =  $scripts->getAttribute('src');
+								if (substr($href,0,2) == "//") {
+								$href = substr($href, 2);
+							}
+						     if (!in_array($href, $c)) {
+								array_push($c, $href);
+							 }									
 						}
-					     if (!in_array($href, $c)) {
-							array_push($c, $href);
-						 }									
-					}
-						
+							
 					}
 
 					get_links($url);
@@ -208,19 +205,23 @@
 					function content_type($url) {
 
 						$ch = curl_init($url);
-
-						curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 						curl_exec($ch);
-
-						if(!curl_errno($ch))
-							{
-								$info = curl_getinfo($ch);
-								return $info['content_type'];
-								
-							}
+						/* Get the content type from CURL */
+						$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
+						 
+						/* Get the MIME type and character set */
+						preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
+						if (isset($matches[1])) {
+						    $mime = $matches[1];
+						}
+						else {
+							$mime = "others";
+						}
+						return $mime;
 
 						curl_close($ch);
-
+   
 					}
 
 					function classification($domain,$url) {
@@ -230,7 +231,7 @@
 			  			}
 			  				
 						else {
-							$status = "Potential Tracker";
+							$status = "Potential Tracker!";
 						}
 
 						return $status;
@@ -241,12 +242,14 @@
 						echo "<table class = 'table table-striped'>";
 						echo "<tbody>";
 						echo "<tr>";
-						echo "<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th>URL</th><th>STATUS</th><th>Existing in DB?</th>";
+						echo "<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th>URL</th><th>STATUS</th><th>NOTE</th>";
 						echo "</tr>";
 						foreach ($c as $page) {
 						$i++;
 						$theDomain = get_domain($page);
 						$url_stat = classification($theHost, $page);
+						$type = content_type($page);
+						//CSS preperation for the status
 							if ($url_stat == "Safe URL") {
 								$icon = "fa fa-check-square fa-lg";
 								$color = "green";
@@ -257,7 +260,7 @@
 							}
 							
 							
-							
+							//strip http and https before inserting into the database
 							if ((substr($page,0,7) == "http://")) {
 								$page = substr($page, 7);
 							} else if ((substr($page,0,8) == "https://")){
@@ -268,11 +271,11 @@
 							$result = $conn->query($sql);
 
 							if ($result->num_rows > 0) {
-							// output data of each row
-									$a = "Yes";
+							//output data of each row
+									$a = "Record exist in the database";
 							} else {
-								if ($url_stat == "Potential Tracker") {
-									$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$page."', 'TBD')");
+								if ($url_stat == "Potential Tracker!") {
+									$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$page."', '".$type."')");
 									$a = "Tracker detected! Added to the database!";
 								}
 								else {
@@ -281,11 +284,9 @@
 							}
 
 						echo "<tr>";
-						echo "<td >".$i."</td><td>".get_domain($url)."</td><td>"."null"."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
-						//content_type($page);
+						echo "<td >".$i."</td><td>".get_domain($url)."</td><td>".$type."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
 						echo "</td><td>".$a;
 						echo "</td>";
-
 						echo "</tr>";
 						}
 						echo "</tbody>";
