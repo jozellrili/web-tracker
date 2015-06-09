@@ -193,6 +193,24 @@ foreach( $doc->getElementsByTagName('script') as $scripts){
 }
  get_links($url);
 
+function get_domain($url) {
+
+	foreach ($url as $value) {
+		# code...
+	
+	$host = @parse_url($value, PHP_URL_HOST);
+
+	if (substr($host, 0, 4) == "www.") {
+        $host = substr($host, 4);
+	}
+	$theHost = $host;
+	return $host;
+}}
+
+$theHost = get_domain($url);
+
+
+
 function classification($domain,$url) {
 		
 	if (preg_match("/\b$domain\b/i", $url, $match)) {
@@ -222,10 +240,7 @@ foreach ($c as $page) {
 
 	$i++;
 	/*get domain*/
-	preg_match('@^(?:http://)?([^/]+)@i', $page, $matches);
-	$host = $matches[1];
-	preg_match('/[^.]+\\.[^.]+$/', $host, $matches);
-	$l = $matches[0];
+
 
 	/*classification*/ 
 	$url_stat = classification($theHost, $page);
@@ -263,7 +278,7 @@ foreach ($c as $page) {
 	}
 	
 	echo "<tr>";
-	echo "<td>".$i."</td><td>".$l."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
+	echo "<td>".$i."</td><td>".get_domain($url)."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
 	echo "</td><td>".$a;
 	echo "</tr>";
 
