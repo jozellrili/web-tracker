@@ -30,7 +30,7 @@
 
 </head>
 
-<body>
+<body id='form'>
    <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
         <div class="container topnav">
@@ -56,7 +56,7 @@
                    <label class="control-label col-sm-1">URL:</label>
                     <div class="col-sm-7">          
                     <input type="text" name="url" id="url" class="form-control" placeholder="http://www.example.com">
-					 <button type="button" class="btn-link" onclick="loadXMLDoc()"><i><u>Advance Crawl</u></i></button>                
+					 <button type="button" class="btn-link" ><i><u>Advance Crawl</u></i></button>                
                     </div>
                     <input type="submit" name="submit" class="btn btn-danger" value="Start Crawling">
                 </form>
@@ -307,28 +307,14 @@
 <script src="js/jquery.js"></script>
 
 <script>
-	function loadXMLDoc()
-	{
-	var xmlhttp;
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	xmlhttp.onreadystatechange=function()
-	  {
-	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-	    {
-	    document.getElementById("form").innerHTML=xmlhttp.responseText;
-	    }
-	  }
-	xmlhttp.open("POST","advance_crawl.php",true);
-	xmlhttp.send();
-	}
-	</script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $.ajax({url: "advance_crawl.php", success: function(result){
+            $("#form").html(result);
+        }});
+    });
+});
+</script>
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
 
