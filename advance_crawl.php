@@ -28,10 +28,28 @@
     <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
         <div class="container topnav">
             <div class="navbar-header">
+             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+              </button>
                  <a class="navbar-brand topnav" href="#">
                     <img src="img/logo.gif" alt="" class="img-responsive">
                 </a>
 
+            </div>
+             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+				    <li>
+                        <a href="index.php"  class="active">HOME</a>
+                    </li>
+                    <li>
+                        <a href="trackers.php">TRACKER LIST</a>
+                    </li>
+                    
+                   
+                </ul>
             </div>
            <!-- navigation  -->
             
@@ -175,9 +193,9 @@ include('db_connection.php');
 
 	function get_domain($url) {
 
-		foreach ($url as $value) {
-		$host = @parse_url($value, PHP_URL_HOST);
-
+		foreach ($url as $urls) {
+		$host = parse_url($urls, PHP_URL_HOST);
+	
 		if (substr($host, 0, 4) == "www.") {
 			$host = substr($host, 4);
 		}
@@ -186,8 +204,8 @@ include('db_connection.php');
 		}
 	}
 	$theHost = get_domain($url);
-	$a = get_domain("http://cnn.com");
-	var_dump($a);
+	//$a = get_domain("http://cnn.com");
+	//var_dump($a);
 
 	function classification($domain,$url) {
 
