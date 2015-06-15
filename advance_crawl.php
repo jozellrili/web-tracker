@@ -204,8 +204,8 @@ include('db_connection.php');
 		}
 	}
 	$theHost = get_domain($url);
-	//$a = get_domain("http://cnn.com");
-	//var_dump($a);
+	$a = get_domain("http://cnn.com");
+	var_dump($a);
 
 	function classification($domain,$url) {
 
@@ -218,6 +218,29 @@ include('db_connection.php');
 		return $status;
 
 	}
+
+
+	// function content_type($url) {
+
+	// 	$ch = curl_init($url);
+	// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	// 	curl_exec($ch);
+	// 	/* Get the content type from CURL */
+	// 	$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
+		 
+	// 	 Get the MIME type and character set 
+	// 	preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
+	// 	if (isset($matches[1])) {
+	// 	    $mime = $matches[1];
+	// 	}
+	// 	else {
+	// 		$mime = "others";
+	// 	}
+	// 	return $mime;
+
+	// 	curl_close($ch);
+
+	// }
 
 
 

@@ -1,0 +1,107 @@
+1,AddThis,s7.addthis.com/js/300/addthis_widget.js,script
+,AddToAny,static.addtoany.com/menu/page.js,script
+,Adroll,a.adroll.com/j/roundtrip.js,script
+,Adzerk,static.smoothx.com/ados.js,script
+,Adzerk,static.adzerk.net/ados.js,script
+,BuySellAds,s3.buysellads.com/ac/bsa.js,script
+,Comscore Beacon,b.scorecardresearch.com/beacon.js,script
+,Doubleclick,stats.g.doubleclick.net/dc.js,script
+,Facebook Connect,connect.facebook.net/en_US/all.js,script
+,Facebook Connect,static.ak.fbcdn.net/connect.php/js/FB.Share,script
+,Google Analytics (Standard),google-analytics.com/analytics.js,script
+,Google Ad,pagead2.googlesyndication.com/pagead/js/adsbygoogle.js,script
+,Google Analytics (Classic),google-analytics.com/ga.js,script
+,Google Analytics (Urchin),google-analytics.com/urchin.js,script
+,Google Analytics (Classic),"ssl.google-analytics.com/ga.js""",script
+,Gravatar,gravatar.com/js/gprofiles.js,script
+,Marketo,ssl-munchkin.marketo.net/js/munchkin.js,script
+,Marketo,munchkin.marketo.net/munchkin.js,script
+,Mixpanel,cdn.mxpnl.com/libs/mixpanel-2.2.min.js,script
+,New Relic,js-agent.newrelic.com/nr-476.min.js,script
+,Parse.ly,static.parsely.com/p.js,script
+,Woopra,static.woopra.com/js/woopra.js,script
+,Woopra,static.woopra.com/js/w.js,script
+,Wordpress Stats,stats.wordpress.com/e-201502.js,script
+,Linkedin,platform.linkedin.com/in.js,script
+,Google+1,apis.google.com/js/plusone.js,script
+,Google Adwords,googleadservices.com/pagead/conversion.js,script
+,Kiss Metrics,i.kissmetrics.com/i.js,script
+,Twitter Bedge,platform.twitter.com/widgets.js,script
+,ChartBeat,static.chartbeat.com/js/chartbeat.js,script
+,Google Adsense,pagead2.googlesyndication.com/pagead/show_ads.js,script
+,Share This,w.sharethis.com/button/sharethis.js,script
+,Visual Website Optimizer,dev.visualwebsiteoptimizer.com/j.php,script
+,Adroll,s.adroll.com/j/roundtrip.js,script
+,Clicky,static.getclicky.com/js,script
+,Hellobar,hellobar.com/hellobar.js,script
+,Hellobar,old.hellobar.com/hellobar.js,script
+,OutBrain,widgets.outbrain.com/OutbrainRater.js,script
+,Tynt Tracer,cdn.tynt.com/tc.js,script
+,Infolinks,resources.infolinks.com/js/infolinks_main.js,script
+,Kontera ContentLink,kona.kontera.com/javascript/lib/KonaLibInline.js,script
+,Gigya,cdn.gigya.com/JS/socialize.js,script
+,Lead Lander,t3.trackalyzer.com/trackalyze.js,script
+,Statcounter,statcounter.com/counter/counter.js,script
+,Mixpanel,cdn.mxpnl.com/libs/mixpanel-2-latest.min.js,script
+,Shopsocially,shopsocially.com/js/all.js,script
+,BlueKai,bkrtx.com/js/bk-static.js,script
+,ShareThis,w.sharethis.com/button/buttons.js,script
+,Hurra,hurra.com/owatag.js,script
+,LeadLander,trackalyzer.com/trackalyze.js,script
+,LeadLander,trackalyzer.com/trackalyze_secure.js,script
+,Visitorpath,track.visitorpath.com/js/track.js,script
+,"Netratings Site Census""",secure-us.imrworldwide.com/v53.js,script
+,ScoreCard Research Beacon,scorecardresearch.com/beacon.js,script
+,Coremetrics,libs.coremetrics.com/eluminate.js,script
+,Visistat,stats.visistat.com/live.js,script
+,Google Tag Manager,googletagmanager.com/gtm.js,script
+,Google Conversion Tracker,googleadservices.com/pagead/conversion.js,script
+,Google Tag Service,googletagservices.com/tag/js/gpt.js,script
+,OutBrain - Visual Revenue,visualrevenue.com/vrs.js,script
+,Pingdom,rum-static.pingdom.net/prum.min.js,script
+,Optimizely,cdn.optimizely.com/js/,
+,Share This,sharethis.com/button/sharethis.js,
+,Comscore Beacon,beacon.js,script
+,Clicktale,cdn.clicktale.net/www,
+,Facebook Connect,connect.facebook.net,
+,Disqus,disqus.com/embed.js,script
+,Disqus,disqus.com/count.js,script
+,Disqus,disquscdn.com/count.js,script
+,Disqus,disquscdn.com/embed.js,script
+,Quantcast,quantserve.com/quant.js,script
+,Hellobar,hellobar.com/hellobar,
+,Hellobar,old.hellobar.com/hellobar,
+,Yahoo Web Analytics,analytics.yahoo.com/fpc.pl,
+,Blog Ads,blogads.com,
+,CrazyEgg,dnn506yrbagrg.cloudfront.net/pages/scripts/,
+,Typekit,use.typekit.net/,
+,AdNexus,ib.adnxs.com/,
+,PO.ST,po.st/static/v3/post-widget.js,script
+,AddThis,addthis_widget.js,
+,Foresee Results,foresee/foresee-trigger.js,script
+,Demandbase,api.demandbase.com/api/v2/,
+,Piwik,piwik.js,
+,Webtrends,webtrends.com/js/webtrends,
+,Zedo,zedo.com/jsc/fm.js,script
+,Krux Digital,krxd.net/ctjs/controltag.js,script
+,Omniture,www.idge/js/analytics/s_code.js,script
+,Brightcove,brightcove.com/js/BrightcoveExperiences.js,script
+,Eloqua,topliners.eloqua.com,
+,Maxymizer,js/mmcore.js,script
+,Onestat,onestat.com/asp,
+,BlueKai,bkrtx.com/js/bk,
+,LeadLander,trackalyzer.com/trackalyze.js,script
+,LeadLander,trackalyzer.com/trackalyze_secure.js,script
+,HubSpot Analytics,js.hs-analytics.net/analytics/,
+,Pardot,pardot.com/pd.js,script
+,Gravatar,gravatar.com/js/gprofiles.js,script
+,Meteor,cdnt.meteorsolutions.com/api/track,
+,Livechat Inc,livechatinc.com/tracking.js,script
+,Databrain,databrain.com/track.ashx,
+,ChartBeat,chartbeat.js,script
+,Mouseflow,cdn.mouseflow.com/projects/,
+,Omniture,omniture,
+,Seevolution,svlu.net/cjs.aspx,
+,Seevolution,seevolution.com/cjs.aspx,
+,Unknown Tracker,analytics,other
+,OutBrain,outbrain.com/outbrain.js,
