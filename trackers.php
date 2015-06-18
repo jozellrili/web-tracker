@@ -223,7 +223,7 @@
 		while($row = $result->fetch_assoc())
 		{
 			echo "<tr>";
-			echo "<td>".$row['id']."</td><td>".$row['domain']."</td><td>".$row['url']."</td><td>".$row['type']."</td>";
+			echo "<td>".$row['id']."</td><td>".$row['domain']."</td><td><a target='_blank' href='".$row['url']."'>".$row['url']."</a></td><td>".$row['type']."</td>";
 			echo "</tr>";
 	
 		}

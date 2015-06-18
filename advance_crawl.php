@@ -250,16 +250,18 @@ foreach ($c as $index => $page) {
 	
 	$i++;
 	
-	//$theDomain = get_domain($page);
-	$url_stat = classification($theHost, $page);
+	//$theDomain = $base[$index];
+	$url_stat = classification($base[$index], $page);
 	//$type = content_type($page);
 	$type = ":)";
 	
 	/*get domain*/
-	preg_match('@^(?:http://)?([^/]+)@i', $url, $matches);
-	$host = $matches[1];
-	preg_match('/[^.]+\\.[^.]+$/', $host, $matches);
-	$l = $matches[0];
+	$pieces = parse_url($page);
+	$domain = isset($pieces['host']) ? $pieces['host'] : '';
+	if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
+	  $la = $regs['domain'];
+
+	}
 	
 
 	if ($url_stat == "Safe URL") {
@@ -286,7 +288,7 @@ foreach ($c as $index => $page) {
 	//}
 	} else {
 		if ($url_stat == "Potential Tracker!") {
-			$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$page."', '".$type."')");
+			$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$la."', '".$page."', '".$type."')");
 			$a = "Tracker detected! Added to the database!";
 		}
 		else {
@@ -295,7 +297,7 @@ foreach ($c as $index => $page) {
 	}
 	
 	echo "<tr>";
-	echo "<td>".$i."</td><td>".$base[$index]."</td><td class='col-sm-2'>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
+	echo "<td>".$i."</td><td>".$base[$index]."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
 	echo "</td><td>".$a;
 	echo "</tr>";
 
