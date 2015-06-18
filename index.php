@@ -220,27 +220,27 @@
 
 
 
-					function content_type($url) {
+					// function content_type($url) {
 
-						$ch = curl_init($url);
-						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-						curl_exec($ch);
-						/* Get the content type from CURL */
-						$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
+					// 	$ch = curl_init($url);
+					// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					// 	curl_exec($ch);
+					// 	/* Get the content type from CURL */
+					// 	$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
 						 
-						/* Get the MIME type and character set */
-						preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
-						if (isset($matches[1])) {
-						    $mime = $matches[1];
-						}
-						else {
-							$mime = "others";
-						}
-						return $mime;
+					// 	 Get the MIME type and character set 
+					// 	preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
+					// 	if (isset($matches[1])) {
+					// 	    $mime = $matches[1];
+					// 	}
+					// 	else {
+					// 		$mime = "others";
+					// 	}
+					// 	return $mime;
 
-						curl_close($ch);
+					// 	curl_close($ch);
    
-					}
+					// }
 
 					function classification($domain,$url) {
 		
@@ -256,17 +256,20 @@
 
 					}
 
-						echo "<div class='container'>";
-						echo "<table class = 'table table-striped'>";
-						echo "<tbody>";
-						echo "<tr>";
-						echo "<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th>URL</th><th>STATUS</th><th>NOTE</th>";
-						echo "</tr>";
+						echo "
+						<div class='container'>
+						<table class = 'table table-striped'>
+						<tbody>
+						<tr>
+						<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>CATEGORY</th><th>URL</th><th>STATUS</th><th>NOTE</th>
+						</tr>
+						";
 						foreach ($c as $page) {
 						$i++;
 						$theDomain = get_domain($page);
 						$url_stat = classification($theHost, $page);
-						$type = content_type($page);
+						//$type = content_type($page);
+						$type = "tbd";
 						//CSS preperation for the status
 							if ($url_stat == "Safe URL") {
 								$icon = "fa fa-check-square fa-lg";
@@ -285,6 +288,7 @@
 								$page = substr($page, 8);
 								}
 
+							//database checking of existing url, insertion of non-existing
 							$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 							$result = $conn->query($sql);
 
@@ -301,15 +305,17 @@
 								}
 							}
 
-						echo "<tr>";
-						echo "<td >".$i."</td><td>".get_domain($url)."</td><td>".$type."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
-						echo "</td><td>".$a;
-						echo "</td>";
-						echo "</tr>";
+						echo "
+						<tr>
+						<td >".$i."</td><td>".get_domain($url)."</td><td>".$type."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td><td>".$a."</td>
+						</tr>
+						";
 						}
-						echo "</tbody>";
-						echo "</table>";
-						echo "</div>";
+						echo "
+						</tbody>
+						</table>
+						</div>
+						";
 					//isset child else	
 					}
 				//eof	

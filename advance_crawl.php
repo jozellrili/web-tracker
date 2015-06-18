@@ -252,11 +252,13 @@ include('db_connection.php');
 	
 
 			
-echo "<table class = 'table table-striped'>";
-echo "<tbody>";
-echo "<tr>";
-echo "<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th class='col-sm-2'>URL</th><th>STATUS</th><th>NOTE</th>";
-echo "</tr>";
+echo "
+<table class = 'table table-striped'>
+<tbody>
+<tr>
+<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th class='col-sm-2'>URL</th><th>STATUS</th><th>NOTE</th>
+</tr>
+";
 foreach ($c as $index => $page) {
 	
 	$i++;
@@ -307,14 +309,16 @@ foreach ($c as $index => $page) {
 		}
 	}
 	
-	echo "<tr>";
-	echo "<td>".$i."</td><td>".$base[$index]."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
-	echo "</td><td>".$a;
-	echo "</tr>";
+	echo "
+	<tr>
+	<td>".$i."</td><td>".$base[$index]."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td><td>".$a."</td>
+	</tr>";
 
 }
-	echo "</tbody>";
-	echo "</table>";
+	echo "
+	</tbody>
+	</table>
+	";
 
 }
 
@@ -357,3 +361,4 @@ $(document).ready( function() {
 
 </body>
 </html>
+

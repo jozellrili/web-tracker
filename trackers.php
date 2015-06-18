@@ -217,14 +217,18 @@
 	<?php
 	
 	if ($result->num_rows > 0) {
+
+		echo "
+		<table class = 'table table-striped'>
+		<tbody>
+		<tr>
+		<th>#</th><th>DOMAIN NAME</th><th>URL</th><th>TYPE</th>
+		</tr>
+		";
+		
 		while($row = $result->fetch_assoc())
 		{	
 			echo "
-			<table class = 'table table-striped'>
-			<tbody>
-			<tr>
-			<th>#</th><th>DOMAIN NAME</th><th>URL</th><th>TYPE</th>
-			</tr>
 			<tr>
 			<td>".$row['id']."</td><td>".$row['domain']."</td><td><a target='_blank' href='".$row['url']."'>".$row['url']."</a></td><td>".$row['type']."</td>
 			</tr>
@@ -235,12 +239,12 @@
 		else {
 
 			echo '
-				<script language="javascript">
-				alert("No record Found! You will be directed to home page.")
-				window.location.href = "index.php"; 
-				</script>
+			<script language="javascript">
+			alert("No record Found! You will be directed to home page.")
+			window.location.href = "index.php"; 
+			</script>
 
-				';
+			';
 
 		}
 	echo "
