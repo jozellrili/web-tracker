@@ -74,7 +74,7 @@
                    <label class="control-label col-sm-1">URL:</label>
                     <div class="col-sm-7">          
                     <input type="text" name="url" id="url" class="form-control" placeholder="http://www.example.com">
-                    <button type="button" class="btn-link" ><i><u>Advance Crawl</u></i></button> 
+                    <button id="btn1" type="button" class="btn-link" ><i><u>Advance Crawl</u></i></button> 
                     </div>
                     <input type="submit" name="submit" class="btn btn-danger" value="Start Crawling">
                 </form>
@@ -256,7 +256,7 @@
 
 					}
 
-
+						echo "<div class='container'>";
 						echo "<table class = 'table table-striped'>";
 						echo "<tbody>";
 						echo "<tr>";
@@ -309,7 +309,7 @@
 						}
 						echo "</tbody>";
 						echo "</table>";
-
+						echo "</div>";
 					//isset child else	
 					}
 				//eof	
@@ -327,7 +327,7 @@
 
 <script>
 $(document).ready(function(){
-    $("button").click(function(){
+    $("#btn1").click(function(){
         $.ajax({url: "advance_crawl.php", success: function(result){
             $("#form").html(result);
         }});
