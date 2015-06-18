@@ -108,10 +108,14 @@ include('db_connection.php');
 			foreach( $doc->getElementsByTagName('link') as $style){
 
 				$href =  $style->getAttribute('href');
-				
+				if (substr($href,0,2) == "//") {
+					$href = substr($href, 2);
+
+				}
 				if (!in_array($base_url, $href, $c)) {
 					array_push($c, $href);
 					$base[] = $base_url;
+					array_filter($href);
 				}
 				
 					
@@ -164,6 +168,7 @@ include('db_connection.php');
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
 					$base[] = $base_url;
+					array_filter($href);
 
 				}
 			
@@ -172,9 +177,14 @@ include('db_connection.php');
 			foreach( $doc->getElementsByTagName('img') as $image){
 
 				$href =  $image->getAttribute('src');
+				if (substr($href,0,2) == "//") {
+					$href = substr($href, 2);
+
+				}
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
 					$base[] = $base_url;
+					array_filter($href);
 				}
 				
 			}
@@ -191,6 +201,7 @@ include('db_connection.php');
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
 					$base[] = $base_url;
+					array_filter($href);
 				}
 					
 				
