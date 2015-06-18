@@ -99,19 +99,22 @@ include('db_connection.php');
 	{	
 
 		$doc = new DOMDocument();
-		global $c;
-		foreach ($url as $urls=> $key) {
-			$doc->loadHTMLFile($key);
-			$base_url = parse_url($key, PHP_URL_HOST);
+		global $c ,$base;
+		foreach ($url as $urls) {
+			$doc->loadHTMLFile($urls);
+			$base_url = parse_url($urls, PHP_URL_HOST);
 
 			// fetching all stylesheet
 			foreach( $doc->getElementsByTagName('link') as $style){
 
 				$href =  $style->getAttribute('href');
-
-				if (!in_array($href, $c)) {
+				
+				if (!in_array($base_url, $href, $c)) {
 					array_push($c, $href);
-				}					
+					$base[] = $base_url;
+				}
+				
+					
 			}
 
 			// fetching all href
@@ -160,9 +163,10 @@ include('db_connection.php');
 				}		
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
+					$base[] = $base_url;
 
 				}
-
+			
 			}
 			// // fetching all image
 			foreach( $doc->getElementsByTagName('img') as $image){
@@ -170,42 +174,34 @@ include('db_connection.php');
 				$href =  $image->getAttribute('src');
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
+					$base[] = $base_url;
 				}
+				
 			}
 
 			//fetching all script
 			foreach( $doc->getElementsByTagName('script') as $scripts){
 
 				$href =  $scripts->getAttribute('src');
+
 				if (substr($href,0,2) == "//") {
 					$href = substr($href, 2);
+
 				}
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
+					$base[] = $base_url;
 				}
+					
+				
 			}
 
+			
 		}				
 
 	}
 	get_links($url);
 
-
-	function get_domain($url) {
-
-		foreach ($url as $urls) {
-		$host = parse_url($urls, PHP_URL_HOST);
-	
-		if (substr($host, 0, 4) == "www.") {
-			$host = substr($host, 4);
-		}
-		$theHost = $host;
-		return $host;
-		}
-	}
-	$theHost = get_domain($url);
-	$a = get_domain("http://cnn.com");
-	var_dump($a);
 
 	function classification($domain,$url) {
 
@@ -241,30 +237,29 @@ include('db_connection.php');
 	// 	curl_close($ch);
 
 	// }
-
-
-
-
+	
 	
 
 			
 echo "<table class = 'table table-striped'>";
 echo "<tbody>";
 echo "<tr>";
-echo "<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th>URL</th><th>STATUS</th><th>NOTE</th>";
+echo "<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th class='col-sm-2'>URL</th><th>STATUS</th><th>NOTE</th>";
 echo "</tr>";
-foreach ($c as $page) {
+foreach ($c as $index => $page) {
+	
 	$i++;
-	$theDomain = get_domain($page);
+	
+	//$theDomain = get_domain($page);
 	$url_stat = classification($theHost, $page);
 	//$type = content_type($page);
 	$type = ":)";
 	
 	/*get domain*/
-	// preg_match('@^(?:http://)?([^/]+)@i', $url, $matches);
-	// $host = $matches[1];
-	// preg_match('/[^.]+\\.[^.]+$/', $host, $matches);
-	// $l = $matches[0];
+	preg_match('@^(?:http://)?([^/]+)@i', $url, $matches);
+	$host = $matches[1];
+	preg_match('/[^.]+\\.[^.]+$/', $host, $matches);
+	$l = $matches[0];
 	
 
 	if ($url_stat == "Safe URL") {
@@ -300,7 +295,7 @@ foreach ($c as $page) {
 	}
 	
 	echo "<tr>";
-	echo "<td>".$i."</td><td>".get_domain($url)."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
+	echo "<td>".$i."</td><td>".$base[$index]."</td><td class='col-sm-2'>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>";
 	echo "</td><td>".$a;
 	echo "</tr>";
 
