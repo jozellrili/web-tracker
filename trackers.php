@@ -72,6 +72,12 @@
 		<div class="container content-section-a" id = "list">
    			 <div class="row">
         		<div class="container">
+        		<form method="POST">
+        		<div id="csv" style="float:right; padding-bottom: 10px;">
+        			<a type="submit" id="btncsv" name="btncsv" class="btn btn-default" onclick="downloadcsv()"><i class="fa fa-download"></i><span> Download</span></a>
+
+        		</div>
+        		</form>
 <?php
 	include('db_connection.php');
 
@@ -258,6 +264,11 @@
 </div>
 </div>
 <script src="js/jquery.js"></script>
+<script>
+function downloadcsv() {
+    window.open("export.php");
+}
+</script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>
