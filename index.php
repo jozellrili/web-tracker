@@ -220,27 +220,27 @@
 
 
 
-					// function content_type($url) {
+					function content_type($url) {
 
-					// 	$ch = curl_init($url);
-					// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-					// 	curl_exec($ch);
-					// 	/* Get the content type from CURL */
-					// 	$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
+						$ch = curl_init($url);
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+						curl_exec($ch);
+						/* Get the content type from CURL */
+						$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
 						 
-					// 	 Get the MIME type and character set 
-					// 	preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
-					// 	if (isset($matches[1])) {
-					// 	    $mime = $matches[1];
-					// 	}
-					// 	else {
-					// 		$mime = "others";
-					// 	}
-					// 	return $mime;
+						 /*Get the MIME type and character set */
+						preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
+						if (isset($matches[1])) {
+						    $mime = $matches[1];
+						}
+						else {
+							$mime = "others";
+						}
+						return $mime;
 
-					// 	curl_close($ch);
+						curl_close($ch);
    
-					// }
+					}
 
 					function classification($domain,$url) {
 		
@@ -267,6 +267,7 @@
 				        return min($chr);
 				     }
 
+
 						echo "
 						<div class='container'>
 						<table class = 'table table-striped'>
@@ -278,8 +279,8 @@
 						foreach ($c as $page) {
 						$i++;
 						$theDomain = get_domain($page);
-						//$type = content_type($page);
-						$type = "tbd";
+						$type = content_type($page);
+						//$type = "tbd";
 							
 							
 							//strip http and https before inserting into the database
@@ -298,7 +299,7 @@
 								$result = $conn->query($sql);
 
 									if ($result->num_rows > 0) {
-										//Data is existing, do nothing	
+										$conn->query("UPDATE tracker_list SET domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
 
 									} else {
 
@@ -319,6 +320,7 @@
 						echo "
 						<tr>
 						<td >".$i."</td><td>".get_domain($url)."</td><td>".$type."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
+						</tr>
 						";
 						}
 						echo "

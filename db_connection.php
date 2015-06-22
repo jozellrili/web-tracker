@@ -3,10 +3,10 @@
 $servername = "localhost";
 $username = "root";
 $password = "test123";
-$dbname = "tracker";
+$database = "tracker";
 
 // Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $database);
 	// Check connection
 	if ($conn->connect_error) {
 	    die("Connection failed: " . $conn->connect_error);

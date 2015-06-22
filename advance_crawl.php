@@ -226,28 +226,38 @@ include('db_connection.php');
 
 	}
 
+	function strposa($haystack, $needles=array()) {
+        $chr = array();
+        foreach($needles as $needle) {
+                $res = strpos($haystack, $needle);
+                if ($res !== false) $chr[$needle] = $res;
+        }
+        if(empty($chr)) return false;
+        return min($chr);
+     }
 
-	// function content_type($url) {
 
-	// 	$ch = curl_init($url);
-	// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	// 	curl_exec($ch);
-	// 	/* Get the content type from CURL */
-	// 	$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
+	function content_type($url) {
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_exec($ch);
+		/* Get the content type from CURL */
+		$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
 		 
-	// 	 Get the MIME type and character set 
-	// 	preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
-	// 	if (isset($matches[1])) {
-	// 	    $mime = $matches[1];
-	// 	}
-	// 	else {
-	// 		$mime = "others";
-	// 	}
-	// 	return $mime;
+		 /*Get the MIME type and character set */
+		preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
+		if (isset($matches[1])) {
+		    $mime = $matches[1];
+		}
+		else {
+			$mime = "others";
+		}
+		return $mime;
 
-	// 	curl_close($ch);
+		curl_close($ch);
 
-	// }
+	}
 	
 	
 
@@ -256,17 +266,14 @@ echo "
 <table class = 'table table-striped'>
 <tbody>
 <tr>
-<th>#</th><th>DOMAIN NAME</th><th>CATEGORY</th><th class='col-sm-2'>URL</th><th>STATUS</th><th>NOTE</th>
+<th>#</th><th>DOMAIN NAME</th><th>TYPE</th><th class='col-sm-2'>URL</th><th>STATUS</th>
 </tr>
 ";
 foreach ($c as $index => $page) {
 	
 	$i++;
-	
-	//$theDomain = $base[$index];
-	$url_stat = classification($base[$index], $page);
-	//$type = content_type($page);
-	$type = ":)";
+	$type = content_type($page);
+	//$type = ":)";
 	
 	/*get domain*/
 	$pieces = parse_url($page);
@@ -277,41 +284,41 @@ foreach ($c as $index => $page) {
 	}
 	
 
-	if ($url_stat == "Safe URL") {
-		$icon = "fa fa-check-square fa-lg";
-		$color = "green";
-	}
-	else {
-		$icon = "fa fa-exclamation-triangle fa-lg";
-		$color = "red";
-	}
-
 	if ((substr($page,0,7) == "http://")) {
 		$page = substr($page, 7);
 	} else if ((substr($page,0,8) == "https://")){
 		$page = substr($page, 8);
 	}
 
-	$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
-	$result = $conn->query($sql);
 
-	if ($result->num_rows > 0) {
-	// output data of each row
-		$a = "Record exist in the database";
-	//}
+	$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
+
+	if (strposa($page, $array)) {
+		//true
+		$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
+		$result = $conn->query($sql);
+
+			if ($result->num_rows > 0) {
+				//Data is existing, do nothing	
+
+			} else {
+
+				$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$la."', '".$page."', '".$type."')");
+			 }
+
+		$icon = "fa fa-exclamation-triangle fa-lg";
+		$color = "red";
+	    
 	} else {
-		if ($url_stat == "Potential Tracker!") {
-			$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$la."', '".$page."', '".$type."')");
-			$a = "Tracker detected! Added to the database!";
-		}
-		else {
-			$a = "This is safe. Do nothing";
-		}
+		//false
+	    $icon = "fa fa-check-square fa-lg";
+		$color = "green";
 	}
 	
 	echo "
 	<tr>
-	<td>".$i."</td><td>".$base[$index]."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td><td>".$a."</td>
+	<td >".$i."</td><td>".$base[$index]."</td><td>".$type."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
+
 	</tr>";
 
 }

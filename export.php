@@ -1,11 +1,12 @@
 <?php
 
-$host="localhost";
-$uname="root";
-$pass="test123";
-$database = "tracker"; 
+include('db_connection.php');
+// $host="localhost";
+// $uname="root";
+// $pass="test123";
+// $database = "tracker"; 
 
-$connection=mysql_connect($host,$uname,$pass); 
+ $connection=mysql_connect($servername,$username,$password); 
 
 echo mysql_error();
 
