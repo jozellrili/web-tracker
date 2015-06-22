@@ -256,29 +256,30 @@
 
 					}
 
+
+					function strposa($haystack, $needles=array()) {
+				        $chr = array();
+				        foreach($needles as $needle) {
+				                $res = strpos($haystack, $needle);
+				                if ($res !== false) $chr[$needle] = $res;
+				        }
+				        if(empty($chr)) return false;
+				        return min($chr);
+				     }
+
 						echo "
 						<div class='container'>
 						<table class = 'table table-striped'>
 						<tbody>
 						<tr>
-						<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>CATEGORY</th><th>URL</th><th>STATUS</th><th>NOTE</th>
+						<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
 						</tr>
 						";
 						foreach ($c as $page) {
 						$i++;
 						$theDomain = get_domain($page);
-						$url_stat = classification($theHost, $page);
 						//$type = content_type($page);
 						$type = "tbd";
-						//CSS preperation for the status
-							if ($url_stat == "Safe URL") {
-								$icon = "fa fa-check-square fa-lg";
-								$color = "green";
-							}
-							else {
-								$icon = "fa fa-exclamation-triangle fa-lg";
-								$color = "red";
-							}
 							
 							
 							//strip http and https before inserting into the database
@@ -288,27 +289,36 @@
 								$page = substr($page, 8);
 								}
 
-							//database checking of existing url, insertion of non-existing
-							$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
-							$result = $conn->query($sql);
 
-							if ($result->num_rows > 0) {
-							//output data of each row
-									$a = "Record exist in the database";
+							$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
+
+							if (strposa($page, $array)) {
+								//true
+								$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
+								$result = $conn->query($sql);
+
+									if ($result->num_rows > 0) {
+										//Data is existing, do nothing	
+
+									} else {
+
+										$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$page."', '".$type."')");
+									 }
+
+								$icon = "fa fa-exclamation-triangle fa-lg";
+								$color = "red";
+							    
 							} else {
-								if ($url_stat == "Potential Tracker!") {
-									$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$page."', '".$type."')");
-									$a = "Tracker detected! Added to the database!";
-								}
-								else {
-									$a = "This is safe. Do nothing";
-								}
+								//false
+							    $icon = "fa fa-check-square fa-lg";
+								$color = "green";
+							   
+
 							}
 
 						echo "
 						<tr>
-						<td >".$i."</td><td>".get_domain($url)."</td><td>".$type."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td><td>".$a."</td>
-						</tr>
+						<td >".$i."</td><td>".get_domain($url)."</td><td>".$type."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
 						";
 						}
 						echo "
