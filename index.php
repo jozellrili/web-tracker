@@ -206,14 +206,13 @@
 					function get_domain($url) {
 
 
-						$host = @parse_url($url, PHP_URL_HOST);
-
-						if (substr($host, 0, 4) == "www.") {
-					        $host = substr($host, 4);
-						}
-
-						$theHost = $host;
-						return $host;
+						$pieces = parse_url($url);
+					    $domain = isset($pieces['host']) ? $pieces['host'] : '';
+					    if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
+					      $la = $regs['domain'];
+					      return $la;
+					    }
+					    
 					}
 
 					$theHost = get_domain($url);
@@ -279,6 +278,7 @@
 						foreach ($c as $page) {
 						$i++;
 						$theDomain = get_domain($page);
+						$match = classification($theHost,$page);
 						//s$type = content_type($page);
 						$type = "";
 							
@@ -293,7 +293,7 @@
 
 							$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
 
-							if (strposa($page, $array)) {
+							if (strposa($page, $array) || ($match == "Potential Tracker!")) {
 								//true
 								$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 								$result = $conn->query($sql);
