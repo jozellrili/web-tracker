@@ -223,8 +223,18 @@ include('db_connection.php');
 			$status = "Potential Tracker!"; 
 		}
 		return $status;
-
 	}
+
+	function get_domain($url) {
+
+			$pieces = parse_url($url);
+		    $domain = isset($pieces['host']) ? $pieces['host'] : '';
+			    if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
+			      $la = $regs['domain'];
+			      return $la;
+			    }
+		    
+		}
 
 	function strposa($haystack, $needles=array()) {
         $chr = array();
@@ -258,6 +268,8 @@ include('db_connection.php');
 		curl_close($ch);
 
 	}
+
+
 	
 	
 
@@ -274,16 +286,8 @@ foreach ($c as $index => $page) {
 	$i++;
 	//$type = content_type($page);
 	$type = "";
+	$theDomain = get_domain($page);
 	
-	/*get domain*/
-	$pieces = parse_url($page);
-	$domain = isset($pieces['host']) ? $pieces['host'] : '';
-	if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
-	  $la = $regs['domain'];
-
-	}
-	
-
 	if ((substr($page,0,7) == "http://")) {
 		$page = substr($page, 7);
 	} else if ((substr($page,0,8) == "https://")){
@@ -293,28 +297,27 @@ foreach ($c as $index => $page) {
 
 	$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
 
-	if (strposa($page, $array)) {
-		//true
-		$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
-		$result = $conn->query($sql);
+		if (strposa($page, $array) || ($match == "Potential Tracker!")) {
+			//true
+			$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
+			$result = $conn->query($sql);
 
-			if ($result->num_rows > 0) {
-				//Data is existing, do nothing
-				$conn->query("UPDATE tracker_list SET domain = '".$la."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
+				if ($result->num_rows > 0) {
+					$conn->query("UPDATE tracker_list SET domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
 
-			} else {
+				} else {
 
-				$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$la."', '".$page."', '".$type."')");
-			 }
+					$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$page."', '".$type."')");
+				 }
 
-		$icon = "fa fa-exclamation-triangle fa-lg";
-		$color = "red";
-	    
-	} else {
-		//false
-	    $icon = "fa fa-check-square fa-lg";
-		$color = "green";
-	}
+			$icon = "fa fa-exclamation-triangle fa-lg";
+			$color = "red";
+		    
+		} else {
+			//false
+		    $icon = "fa fa-check-square fa-lg";
+			$color = "green";
+		}
 	
 	echo "
 	<tr>
