@@ -279,8 +279,8 @@
 						foreach ($c as $page) {
 						$i++;
 						$theDomain = get_domain($page);
-						$type = content_type($page);
-						//$type = "tbd";
+						//s$type = content_type($page);
+						$type = "";
 							
 							
 							//strip http and https before inserting into the database

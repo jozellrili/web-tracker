@@ -272,8 +272,8 @@ echo "
 foreach ($c as $index => $page) {
 	
 	$i++;
-	$type = content_type($page);
-	//$type = ":)";
+	//$type = content_type($page);
+	$type = "";
 	
 	/*get domain*/
 	$pieces = parse_url($page);
@@ -299,7 +299,8 @@ foreach ($c as $index => $page) {
 		$result = $conn->query($sql);
 
 			if ($result->num_rows > 0) {
-				//Data is existing, do nothing	
+				//Data is existing, do nothing
+				$conn->query("UPDATE tracker_list SET domain = '".$la."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
 
 			} else {
 
