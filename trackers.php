@@ -115,7 +115,7 @@
 	if($lastpage > 1)
 	{	
 
-		$pagination .= "<div class='pagination'>";
+		$pagination .= "<div class='container row pagination'>";
         //first button
         if ($page > 1){
         	$pagination.="<span class ='visible'><a href='$targetpage?page=1'>first</a></span>";
@@ -225,6 +225,7 @@
 	if ($result->num_rows > 0) {
 
 		echo "
+		<div class='container'>
 		<table class = 'table table-striped'>
 		<tbody>
 		<tr>
@@ -256,6 +257,7 @@
 	echo "
 	</table>
 	</tbody>
+	</div>
 	";
 	?>
 

@@ -123,7 +123,7 @@
 						foreach( $doc->getElementsByTagName('link') as $style){
 					   
 					    	$href =  $style->getAttribute('href');
-
+					    	
 					        if (!in_array($href, $c)) {
 							array_push($c, $href);
 						 	}					
@@ -174,6 +174,7 @@
 							}
 							if (!in_array($href, $c)) {
 								array_push($c, $href);
+								
 							 }			   
 						}
 
@@ -218,27 +219,48 @@
 					$theHost = get_domain($url);
 
 
+					function get_content_type($url)
+					{
 
-					function content_type($url) {
-
-						$ch = curl_init($url);
-						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-						curl_exec($ch);
-						/* Get the content type from CURL */
-						$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
-						 
-						 /*Get the MIME type and character set */
-						preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
-						if (isset($matches[1])) {
-						    $mime = $matches[1];
+        				// our list of mime types
+				        $mime_types = array(
+				                "pdf"=>"application/pdf"
+				                ,"exe"=>"application/octet-stream"
+				                ,"zip"=>"application/zip"
+				                ,"docx"=>"application/msword"
+				                ,"doc"=>"application/msword"
+				                ,"xls"=>"application/vnd.ms-excel"
+				                ,"ppt"=>"application/vnd.ms-powerpoint"
+				                ,"gif"=>"image/gif"
+				                ,"png"=>"image/png"
+				                ,"ico"=>"image/ico"
+				                ,"jpeg"=>"image/jpg"
+				                ,"jpg"=>"image/jpg"
+				                ,"mp3"=>"audio/mpeg"
+				                ,"wav"=>"audio/x-wav"
+				                ,"mpeg"=>"video/mpeg"
+				                ,"mpg"=>"video/mpeg"
+				                ,"mpe"=>"video/mpeg"
+				                ,"mov"=>"video/quicktime"
+				                ,"avi"=>"video/x-msvideo"
+				                ,"3gp"=>"video/3gpp"
+				                ,"css"=>"text/css"
+				                ,"jsc"=>"application/javascript"
+				                ,"js"=>"application/javascript"
+				                ,"php"=>"text/html"
+				                ,"htm"=>"text/html"
+				                ,"html"=>"text/html"
+				                ,"xml"=>"application/xml"
+				                
+				        );
+						$var = explode('.', $url);
+				        $extension = strtolower(end($var));
+				        if(isset($mime_types[$extension])){
+				        return $mime_types[$extension];
 						}
-						else {
-							$mime = "others";
+						else{
+							return 'other';
 						}
-						return $mime;
-
-						curl_close($ch);
-   
 					}
 
 					function classification($domain,$url) {
@@ -268,20 +290,21 @@
 
 
 						echo "
-						<div class='container'>
+						
 						<table class = 'table table-striped'>
 						<tbody>
+						<div class='container'>
 						<tr>
 						<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
 						</tr>
 						";
-						foreach ($c as $page) {
+						foreach (array_filter($c) as $page) {
 						$i++;
 						$theDomain = get_domain($page);
 						$match = classification($theHost,$page);
 						//s$type = content_type($page);
-						$type = "";
-							
+						$type = get_content_type($page);
+						//$result = $page;
 							
 							//strip http and https before inserting into the database
 							if ((substr($page,0,7) == "http://")) {
@@ -317,14 +340,15 @@
 
 						echo "
 						<tr>
-						<td >".$i."</td><td>".get_domain($url)."</td><td>".$type."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
+						<td >".$i."</td><td>".get_domain($url)."</td><td>".get_content_type($page)."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
 						</tr>
+						</div>
 						";
 						}
 						echo "
 						</tbody>
 						</table>
-						</div>
+						
 						";
 					//isset child else	
 					}
@@ -349,6 +373,8 @@ $(document).ready(function(){
         }});
     });
 });
+
+
 </script>
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>

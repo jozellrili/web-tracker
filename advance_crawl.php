@@ -115,7 +115,7 @@ include('db_connection.php');
 				if (!in_array($base_url, $href, $c)) {
 					array_push($c, $href);
 					$base[] = $base_url;
-					array_filter($href);
+					
 				}
 				
 					
@@ -168,7 +168,7 @@ include('db_connection.php');
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
 					$base[] = $base_url;
-					array_filter($href);
+					
 
 				}
 			
@@ -184,7 +184,7 @@ include('db_connection.php');
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
 					$base[] = $base_url;
-					array_filter($href);
+					
 				}
 				
 			}
@@ -201,7 +201,7 @@ include('db_connection.php');
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
 					$base[] = $base_url;
-					array_filter($href);
+					
 				}
 					
 				
@@ -247,26 +247,70 @@ include('db_connection.php');
      }
 
 
-	function content_type($url) {
+	// function content_type($url) {
 
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_exec($ch);
-		/* Get the content type from CURL */
-		$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
+	// 	$ch = curl_init($url);
+	// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	// 	curl_exec($ch);
+	// 	/* Get the content type from CURL */
+	// 	$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
 		 
-		 /*Get the MIME type and character set */
-		preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
-		if (isset($matches[1])) {
-		    $mime = $matches[1];
-		}
-		else {
-			$mime = "others";
-		}
-		return $mime;
+	// 	 Get the MIME type and character set 
+	// 	preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
+	// 	if (isset($matches[1])) {
+	// 	    $mime = $matches[1];
+	// 	}
+	// 	else {
+	// 		$mime = "others";
+	// 	}
+	// 	return $mime;
 
-		curl_close($ch);
+	// 	curl_close($ch);
 
+	// }
+
+	function get_content_type($url)
+		{
+
+        				// our list of mime types
+		$mime_types = array(
+			"pdf"=>"application/pdf"
+			,"exe"=>"application/octet-stream"
+			,"zip"=>"application/zip"
+			,"docx"=>"application/msword"
+			,"doc"=>"application/msword"
+			,"xls"=>"application/vnd.ms-excel"
+			,"ppt"=>"application/vnd.ms-powerpoint"
+			,"gif"=>"image/gif"
+			,"png"=>"image/png"
+		    ,"ico"=>"image/ico"
+		    ,"jpeg"=>"image/jpg"
+		    ,"jpg"=>"image/jpg"
+		    ,"mp3"=>"audio/mpeg"
+		    ,"wav"=>"audio/x-wav"
+		    ,"mpeg"=>"video/mpeg"
+		    ,"mpg"=>"video/mpeg"
+		    ,"mpe"=>"video/mpeg"
+		    ,"mov"=>"video/quicktime"
+		    ,"avi"=>"video/x-msvideo"
+		    ,"3gp"=>"video/3gpp"
+		    ,"css"=>"text/css"
+		    ,"jsc"=>"application/javascript"
+		    ,"js"=>"application/javascript"
+		    ,"php"=>"text/html"
+		    ,"htm"=>"text/html"
+		    ,"html"=>"text/html"
+		    ,"xml"=>"application/xml"
+		         
+		);
+		$var = explode('.', $url);
+		$extension = strtolower(end($var));
+		if(isset($mime_types[$extension])){
+		    return $mime_types[$extension];
+		}
+		else{
+			return 'other';
+		}
 	}
 
 
@@ -275,13 +319,14 @@ include('db_connection.php');
 
 			
 echo "
+<div class='container'>
 <table class = 'table table-striped'>
 <tbody>
 <tr>
-<th>#</th><th>DOMAIN NAME</th><th>TYPE</th><th class='col-sm-2'>URL</th><th>STATUS</th>
+<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
 </tr>
 ";
-foreach ($c as $index => $page) {
+foreach (array_filter($c) as $index => $page) {
 	
 	$i++;
 	//$type = content_type($page);
@@ -321,7 +366,7 @@ foreach ($c as $index => $page) {
 	
 	echo "
 	<tr>
-	<td >".$i."</td><td>".$base[$index]."</td><td>".$type."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
+	<td >".$i."</td><td>".$base[$index]."</td><td>".get_content_type($page)."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
 
 	</tr>";
 
@@ -329,6 +374,7 @@ foreach ($c as $index => $page) {
 	echo "
 	</tbody>
 	</table>
+	</div>
 	";
 
 }
