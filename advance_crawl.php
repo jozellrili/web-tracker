@@ -99,7 +99,7 @@ include('db_connection.php');
 	{	
 
 		$doc = new DOMDocument();
-		global $c ,$base;
+		global $c ,$base, $l;
 		foreach ($url as $urls) {
 			$doc->loadHTMLFile($urls);
 			$base_url = parse_url($urls, PHP_URL_HOST);
@@ -201,6 +201,7 @@ include('db_connection.php');
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
 					$base[] = $base_url;
+					$l[] = $href;
 					
 				}
 					
@@ -246,33 +247,10 @@ include('db_connection.php');
         return min($chr);
      }
 
-
-	// function content_type($url) {
-
-	// 	$ch = curl_init($url);
-	// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	// 	curl_exec($ch);
-	// 	/* Get the content type from CURL */
-	// 	$content_type = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
-		 
-	// 	 Get the MIME type and character set 
-	// 	preg_match( '@([\w/+]+)(;\s+charset=(\S+))?@i', $content_type, $matches );
-	// 	if (isset($matches[1])) {
-	// 	    $mime = $matches[1];
-	// 	}
-	// 	else {
-	// 		$mime = "others";
-	// 	}
-	// 	return $mime;
-
-	// 	curl_close($ch);
-
-	// }
-
 	function get_content_type($url)
 		{
 
-        				// our list of mime types
+        // our list of mime types
 		$mime_types = array(
 			"pdf"=>"application/pdf"
 			,"exe"=>"application/octet-stream"
@@ -315,7 +293,36 @@ include('db_connection.php');
 
 
 	
-	
+	//check if exist in database, if not insert.
+	 foreach (array_filter($l) as $key => $value) {
+	 	$a++;
+
+	 	$theDomain = get_domain($value);
+		$match = classification($theHost,$value);
+		$type = get_content_type($value);
+			
+			//strip http and https before inserting into the database
+			if ((substr($value,0,7) == "http://")) {
+				$page = substr($value, 7);
+			} else if ((substr($value,0,8) == "https://")){
+				$page = substr($value, 8);
+				}
+
+
+			$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
+
+			if (strposa($value, $array) || ($match == "Potential Tracker!")) {
+				$sql = "SELECT * FROM tracker_list WHERE url = '".$value."' ";
+				$result = $conn->query($sql);
+
+					if ($result->num_rows > 0) {
+						$conn->query("UPDATE tracker_list SET domain = '".$theDomain."', url = '".$value."', type = '".$type."'  WHERE url = '".$value."' ");
+					} else {
+
+						$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$value."', '".$type."')");
+					 }   
+			} 
+	}
 
 			
 echo "
@@ -326,43 +333,24 @@ echo "
 <th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
 </tr>
 ";
+//for output
 foreach (array_filter($c) as $index => $page) {
-	
-	$i++;
-	//$type = content_type($page);
-	$type = "";
-	$theDomain = get_domain($page);
-	
-	if ((substr($page,0,7) == "http://")) {
-		$page = substr($page, 7);
-	} else if ((substr($page,0,8) == "https://")){
-		$page = substr($page, 8);
+$i++;
+$theDomain = get_domain($page);
+$match = classification($theHost,$page);
+$type = get_content_type($page);
+
+	$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
+	$result = $conn->query($sql);
+
+	if ($result->num_rows > 0) {
+		$icon = "fa fa-exclamation-triangle fa-lg";
+		$color = "red";
+	    
+	} else {
+	    $icon = "fa fa-check-square fa-lg";
+		$color = "green";
 	}
-
-
-	$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
-
-		if (strposa($page, $array) || ($match == "Potential Tracker!")) {
-			//true
-			$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
-			$result = $conn->query($sql);
-
-				if ($result->num_rows > 0) {
-					$conn->query("UPDATE tracker_list SET domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
-
-				} else {
-
-					$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$page."', '".$type."')");
-				 }
-
-			$icon = "fa fa-exclamation-triangle fa-lg";
-			$color = "red";
-		    
-		} else {
-			//false
-		    $icon = "fa fa-check-square fa-lg";
-			$color = "green";
-		}
 	
 	echo "
 	<tr>
