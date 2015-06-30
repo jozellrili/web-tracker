@@ -294,9 +294,7 @@
 				     foreach (array_filter($l) as $key => $value) {
 				     	$theDomain = get_domain($value);
 						$match = classification($theHost,$value);
-						//s$type = content_type($page);
-						$type = "";
-							
+						$type = get_content_type($page);							
 							
 							//strip http and https before inserting into the database
 							if ((substr($value,0,7) == "http://")) {
@@ -338,7 +336,6 @@
 						$theDomain = get_domain($page);
 						$match = classification($theHost,$page);
 						$type = get_content_type($page);
-						//$type = "";
 
 							$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 							$result = $conn->query($sql);
@@ -351,47 +348,6 @@
 							    $icon = "fa fa-check-square fa-lg";
 								$color = "green";
 							}
-
-
-						// foreach (array_filter($c) as $page) {
-						// $i++;
-						// $theDomain = get_domain($page);
-						// $match = classification($theHost,$page);
-						// //s$type = content_type($page);
-						// $type = get_content_type($page);
-						// //$result = $page;
-							
-						// 	//strip http and https before inserting into the database
-						// 	if ((substr($page,0,7) == "http://")) {
-						// 		$page = substr($page, 7);
-						// 	} else if ((substr($page,0,8) == "https://")){
-						// 		$page = substr($page, 8);
-						// 		}
-
-
-						// 	$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
-
-						// 	if (strposa($page, $array) || ($match == "Potential Tracker!")) {
-						// 		//true
-						// 		$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
-						// 		$result = $conn->query($sql);
-
-						// 			if ($result->num_rows > 0) {
-						// 				$conn->query("UPDATE tracker_list SET domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
-
-						// 			} else {
-
-						// 				$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$page."', '".$type."')");
-						// 			 }
-
-						// 		$icon = "fa fa-exclamation-triangle fa-lg";
-						// 		$color = "red";
-							    
-						// 	} else {
-						// 		//false
-						// 	    $icon = "fa fa-check-square fa-lg";
-						// 		$color = "green";
-						// 	}
 
 						echo "
 						<tr>
