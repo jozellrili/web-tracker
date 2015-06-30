@@ -294,7 +294,7 @@
 				     foreach (array_filter($l) as $key => $value) {
 				     	$theDomain = get_domain($value);
 						$match = classification($theHost,$value);
-						$type = get_content_type($page);							
+						$type = get_content_type($value);							
 							
 							//strip http and https before inserting into the database
 							if ((substr($value,0,7) == "http://")) {
