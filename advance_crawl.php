@@ -60,7 +60,6 @@
 <div class="home-banner"></div>
  <div class="container content-section-a">
     <div class="row">
-        <div class="container">
             <div class="col-md-offset-2">
     			
     			<form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
@@ -81,10 +80,12 @@
                
                 <div class="form col-md-7">
                 <h4>The URL's you submit for crawling are recorded.</h4>
-                <p>See All Crawled URL's <a href="">here.</a></p>
+                
            		</div>
 
            	</div>
+           	
+
 <?php
 include('db_connection.php');
 
@@ -92,7 +93,7 @@ include('db_connection.php');
 		$file = $_FILES["file"]["tmp_name"] ;
 
 		$i = 0;
-		$url = file($file, FILE_IGNORE_NEW_LINES);
+		$url = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 		$c = array();
 
 	function get_links($url)
@@ -129,6 +130,9 @@ include('db_connection.php');
 				if (strpos($href, "#")) {
 					$href = substr($href, 0, strpos($href, "#"));
 
+				}
+				if (strpos($href, "?")) {
+					$href = substr($href, 0, strpos($href, "?"));
 				}
 				if (substr($href,0,1) == ".") {
 					$href = substr($href, 1);
@@ -181,6 +185,14 @@ include('db_connection.php');
 					$href = substr($href, 2);
 
 				}
+				if (strpos($href, "#")) {
+					$href = substr($href, 0, strpos($href, "#"));
+
+				}
+				if (strpos($href, "?")) {
+					$href = substr($href, 0, strpos($href, "?"));
+
+				}
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
 					$base[] = $base_url;
@@ -196,6 +208,14 @@ include('db_connection.php');
 
 				if (substr($href,0,2) == "//") {
 					$href = substr($href, 2);
+
+				}
+				if (strpos($href, "#")) {
+					$href = substr($href, 0, strpos($href, "#"));
+
+				}
+				if (strpos($href, "?")) {
+					$href = substr($href, 0, strpos($href, "?"));
 
 				}
 				if (!in_array($href, $c)) {
@@ -327,7 +347,8 @@ include('db_connection.php');
 			
 echo "
 <div class='container'>
-<table class = 'table table-striped'>
+<div class='row'>
+<table class ='table table-striped'>
 <tbody>
 <tr>
 <th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
@@ -339,6 +360,7 @@ $i++;
 $theDomain = get_domain($page);
 $match = classification($theHost,$page);
 $type = get_content_type($page);
+//$links = wordwrap($page, 30, "\n", true);
 
 	$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 	$result = $conn->query($sql);
@@ -354,8 +376,7 @@ $type = get_content_type($page);
 	
 	echo "
 	<tr>
-	<td >".$i."</td><td>".$base[$index]."</td><td>".get_content_type($page)."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
-
+	<td>".$i."</td><td>".$base[$index]."</td><td>".get_content_type($page)."</td><td style='word-break:break-all;'>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>"."</td>
 	</tr>";
 
 }
@@ -363,16 +384,15 @@ $type = get_content_type($page);
 	</tbody>
 	</table>
 	</div>
+	</div>
 	";
 
 }
 
 ?>
-</div>  
-</div>     
+
 </div>
-
-
+</div>
 
 <!-- jQuery -->
 <script src="js/jquery.js"></script>

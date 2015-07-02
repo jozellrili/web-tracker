@@ -74,22 +74,20 @@
                    <label class="control-label col-sm-1">URL:</label>
                     <div class="col-sm-7">          
                     <input type="text" name="url" id="url" class="form-control" placeholder="http://www.example.com">
-                    <button id="btn1" type="button" class="btn-link" ><i><u>Advance Crawl</u></i></button> 
+                    <a type="button" href="advance_crawl.php" class="btn-link" ><i><u>Advance Crawl</u></i></a>
                     </div>
                     <input type="submit" name="submit" class="btn btn-danger" value="Start Crawling">
                 </form>
                 <div class="form col-md-7">
                 <h4>The URL's you submit for crawling are recorded.</h4>
-                <p>See All Crawled URL's <a href="">here.</a></p>
+   
            		</div>
             </div>
             	<?php
 				include('db_connection.php');
 
 
-				error_reporting(E_ALL);
-				ini_set('display_errors', '1');
-
+			
 				if(isset($_POST['submit'])) {
 					if (empty($_POST['url']))
 					{
@@ -376,17 +374,6 @@
 <!-- jQuery -->
 <script src="js/jquery.js"></script>
 
-<script>
-$(document).ready(function(){
-    $("#btn1").click(function(){
-        $.ajax({url: "advance_crawl.php", success: function(result){
-            $("#form").html(result);
-        }});
-    });
-});
-
-
-</script>
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
 
