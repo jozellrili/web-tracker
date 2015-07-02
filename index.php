@@ -288,11 +288,13 @@
 				     }
 
 
-				      //check if exist in database, if not insert.
+				      
+				     //check if exist in database, if not insert.
 				     foreach (array_filter($l) as $key => $value) {
+				     	
 				     	$theDomain = get_domain($value);
 						$match = classification($theHost,$value);
-						$type = get_content_type($value);							
+						$type = get_content_type($value);	
 							
 							//strip http and https before inserting into the database
 							if ((substr($value,0,7) == "http://")) {
@@ -331,9 +333,6 @@
 
 						foreach (array_filter($c) as $index => $page) {
 						$i++;
-						$theDomain = get_domain($page);
-						$match = classification($theHost,$page);
-						$type = get_content_type($page);
 
 							$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 							$result = $conn->query($sql);
