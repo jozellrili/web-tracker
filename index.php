@@ -52,7 +52,7 @@
                         <a href="index.php"  class="active">HOME</a>
                     </li>
                     <li>
-                        <a href="trackers.php">TRACKER LIST</a>
+                        <a href="tracker.php">TRACKER LIST</a>
                     </li>
                     
                    

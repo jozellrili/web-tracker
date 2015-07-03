@@ -55,4 +55,8 @@ input[readonly] {
 #list {
   margin-top: 60px;
 }
- 
+/*navigation space*/
+.space {
+  margin-top: 65px;
+  /*padding-bottom: 165px;*/
+}
