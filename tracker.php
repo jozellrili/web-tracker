@@ -114,7 +114,7 @@
             </table>
         </div>
         <div class="col-md-12" ng-show="filteredItems == 0">
-            <div class="col-md-12">
+            <div class="col-md-offset-5">
                 <h4>No record found</h4>
             </div>
         </div>
