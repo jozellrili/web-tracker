@@ -226,6 +226,10 @@ include('db_connection.php');
 					$href = substr($href, 0, strpos($href, "?"));
 
 				}
+				if (substr($href, 0, 1) != "/") {
+						$href = $base_url."/".$href;
+					}
+				
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
 					$l[] = $href;
@@ -336,7 +340,12 @@ include('db_connection.php');
 				$value = substr($value, 7);
 			} else if ((substr($value,0,8) == "https://")){
 				$value = substr($value, 8);
+			}else if ($theDomain =='') {
+				$pattern = '/\w+\..{2,3}(?:\..{2,3})?(?:$|(?=\/))/i';
+				if (preg_match($pattern, $value, $matches) === 1) {
+					$theDomain = $matches[0];
 				}
+			}
 
 
 			$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
