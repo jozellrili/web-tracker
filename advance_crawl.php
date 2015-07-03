@@ -228,20 +228,15 @@ include('db_connection.php');
 				}
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
-					$base[] = $base_url;
-					if (substr($base_url, 0, 4) == "www.")
-					     {$base1[] = substr($base_url, 4);}
-					//$base1[] = $base_url;
 					$l[] = $href;
-					
-				}
-					
-				
+					$base[] = $base_url;
+
+					if (substr($base_url, 0, 4) == "www.") {
+					    $base1[] = substr($base_url, 4);
+					}			
+				}					
 			}
-
-			
-		}				
-
+		}
 	}
 	get_links($url);
 
@@ -254,10 +249,11 @@ include('db_connection.php');
 			    if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
 			      $la = $regs['domain'];
 			      return $la;
-			    }
-		    
-		}
+			    }		    
+	}
 		$theHost = get_domain($url);
+
+
 
 	function classification($domain,$url) {
 
@@ -273,9 +269,7 @@ include('db_connection.php');
 
 	
 
-	function get_content_type($url)
-		{
-
+	function get_content_type($url){
         // our list of mime types
 		$mime_types = array(
 			"pdf"=>"application/pdf"
@@ -317,12 +311,14 @@ include('db_connection.php');
 		}
 	}
 
+
+
 	function strposa($haystack, $needles=array()) {
         $chr = array();
-        foreach($needles as $needle) {
-                $res = strpos($haystack, $needle);
-                if ($res !== false) $chr[$needle] = $res;
-        }
+	        foreach($needles as $needle) {
+	                $res = strpos($haystack, $needle);
+	                if ($res !== false) $chr[$needle] = $res;
+	        }
         if(empty($chr)) return false;
         return min($chr);
      }
@@ -356,9 +352,7 @@ include('db_connection.php');
 						$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$value."', '".$type."')");
 					 }  
 					
-			} 
-			 
-		
+			} 		 	
 	}
 
 			
@@ -404,7 +398,6 @@ $i++;
 	</div>
 	</div>
 	";
-
 }
 
 ?>
