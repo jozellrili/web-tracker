@@ -121,9 +121,20 @@
 						foreach( $doc->getElementsByTagName('link') as $style){
 					   
 					    	$href =  $style->getAttribute('href');
-					    	
+					    	if (substr($href,0,2) == "//") {
+							$href = substr($href, 2);
+							}
+							if (strpos($href, "#")) {
+							$href = substr($href, 0, strpos($href, "#"));
+
+							}
+							if (strpos($href, "?")) {
+								$href = substr($href, 0, strpos($href, "?"));
+
+							}
 					        if (!in_array($href, $c)) {
 							array_push($c, $href);
+
 						 	}					
 						}
 
@@ -180,6 +191,17 @@
 						foreach( $doc->getElementsByTagName('img') as $image){
 						  
 						    $href =  $image->getAttribute('src');
+						    if (substr($href,0,2) == "//") {
+							$href = substr($href, 2);
+							}
+							if (strpos($href, "#")) {
+							$href = substr($href, 0, strpos($href, "#"));
+
+							}
+							if (strpos($href, "?")) {
+								$href = substr($href, 0, strpos($href, "?"));
+
+							}
 						  	if (!in_array($href, $c)) {
 								array_push($c, $href);
 							 }						
@@ -189,12 +211,23 @@
 						foreach( $doc->getElementsByTagName('script') as $scripts){
 							
 						    $href =  $scripts->getAttribute('src');
-								if (substr($href,0,2) == "//") {
-								$href = substr($href, 2);
+						   
+							if (substr($href,0,2) == "//") {
+							$href = substr($href, 2);
 							}
+							if (strpos($href, "#")) {
+							$href = substr($href, 0, strpos($href, "#"));
+
+							}
+							if (strpos($href, "?")) {
+								$href = substr($href, 0, strpos($href, "?"));
+
+							}
+
 						     if (!in_array($href, $c)) {
 								array_push($c, $href);
 								$l[] = $href;
+
 							 }									
 						}
 							
@@ -212,6 +245,7 @@
 						      $la = $regs['domain'];
 						      return $la;
 						    }
+						   
 					    
 					}
 
@@ -295,13 +329,19 @@
 				     	$theDomain = get_domain($value);
 						$match = classification($theHost,$value);
 						$type = get_content_type($value);	
-							
+						
 							//strip http and https before inserting into the database
 							if ((substr($value,0,7) == "http://")) {
-								$page = substr($value, 7);
+								$value = substr($value, 7);
 							} else if ((substr($value,0,8) == "https://")){
-								$page = substr($value, 8);
+								$value = substr($value, 8);
+							} else if ($theDomain =='') {
+								$pattern = '/\w+\..{2,3}(?:\..{2,3})?(?:$|(?=\/))/i';
+								if (preg_match($pattern, $value, $matches) === 1) {
+								    $theDomain = $matches[0];
 								}
+							}
+
 
 
 							$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
@@ -333,6 +373,12 @@
 
 						foreach (array_filter($c) as $index => $page) {
 						$i++;
+							
+							if ((substr($page,0,7) == "http://")) {
+								$page = substr($page, 7);
+							} else if ((substr($page,0,8) == "https://")){
+								$page = substr($page, 8);
+								}
 
 							$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 							$result = $conn->query($sql);
