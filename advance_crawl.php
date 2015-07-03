@@ -93,14 +93,14 @@ include('db_connection.php');
 		$file = $_FILES["file"]["tmp_name"] ;
 
 		$i = 0;
-		$url = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+		$url = file($file, FILE_IGNORE_NEW_LINES);
 		$c = array();
 
 	function get_links($url)
 	{	
 
 		$doc = new DOMDocument();
-		global $c ,$base, $l;
+		global $c ,$base, $l, $base1;
 		foreach ($url as $urls) {
 			$doc->loadHTMLFile($urls);
 			$base_url = parse_url($urls, PHP_URL_HOST);
@@ -111,6 +111,14 @@ include('db_connection.php');
 				$href =  $style->getAttribute('href');
 				if (substr($href,0,2) == "//") {
 					$href = substr($href, 2);
+
+				}
+				if (strpos($href, "#")) {
+					$href = substr($href, 0, strpos($href, "#"));
+
+				}
+				if (strpos($href, "?")) {
+					$href = substr($href, 0, strpos($href, "?"));
 
 				}
 				if (!in_array($base_url, $href, $c)) {
@@ -221,6 +229,9 @@ include('db_connection.php');
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
 					$base[] = $base_url;
+					if (substr($base_url, 0, 4) == "www.")
+					     {$base1[] = substr($base_url, 4);}
+					//$base1[] = $base_url;
 					$l[] = $href;
 					
 				}
@@ -235,6 +246,19 @@ include('db_connection.php');
 	get_links($url);
 
 
+	
+	function get_domain($url) {
+
+			$pieces = parse_url($url);
+		    $domain = isset($pieces['host']) ? $pieces['host'] : '';
+			    if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
+			      $la = $regs['domain'];
+			      return $la;
+			    }
+		    
+		}
+		$theHost = get_domain($url);
+
 	function classification($domain,$url) {
 
 		if (preg_match("/\b$domain\b/i", $url, $match)) {
@@ -246,26 +270,8 @@ include('db_connection.php');
 		return $status;
 	}
 
-	function get_domain($url) {
 
-			$pieces = parse_url($url);
-		    $domain = isset($pieces['host']) ? $pieces['host'] : '';
-			    if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
-			      $la = $regs['domain'];
-			      return $la;
-			    }
-		    
-		}
-
-	function strposa($haystack, $needles=array()) {
-        $chr = array();
-        foreach($needles as $needle) {
-                $res = strpos($haystack, $needle);
-                if ($res !== false) $chr[$needle] = $res;
-        }
-        if(empty($chr)) return false;
-        return min($chr);
-     }
+	
 
 	function get_content_type($url)
 		{
@@ -311,21 +317,29 @@ include('db_connection.php');
 		}
 	}
 
-
+	function strposa($haystack, $needles=array()) {
+        $chr = array();
+        foreach($needles as $needle) {
+                $res = strpos($haystack, $needle);
+                if ($res !== false) $chr[$needle] = $res;
+        }
+        if(empty($chr)) return false;
+        return min($chr);
+     }
 	
 	//check if exist in database, if not insert.
 	 foreach (array_filter($l) as $key => $value) {
-	 	$a++;
-
+	 	
 	 	$theDomain = get_domain($value);
-		$match = classification($theHost,$value);
+	 	$multipleDomain = $base1[$key];
+		$match = classification($multipleDomain,$value);
 		$type = get_content_type($value);
-			
+		
 			//strip http and https before inserting into the database
 			if ((substr($value,0,7) == "http://")) {
-				$page = substr($value, 7);
+				$value = substr($value, 7);
 			} else if ((substr($value,0,8) == "https://")){
-				$page = substr($value, 8);
+				$value = substr($value, 8);
 				}
 
 
@@ -340,8 +354,11 @@ include('db_connection.php');
 					} else {
 
 						$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$value."', '".$type."')");
-					 }   
+					 }  
+					
 			} 
+			 
+		
 	}
 
 			
@@ -357,10 +374,11 @@ echo "
 //for output
 foreach (array_filter($c) as $index => $page) {
 $i++;
-$theDomain = get_domain($page);
-$match = classification($theHost,$page);
-$type = get_content_type($page);
-//$links = wordwrap($page, 30, "\n", true);
+	if ((substr($page,0,7) == "http://")) {
+				$page = substr($page, 7);
+			} else if ((substr($page,0,8) == "https://")){
+				$page = substr($page, 8);
+				}
 
 	$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 	$result = $conn->query($sql);
