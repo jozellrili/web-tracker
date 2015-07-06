@@ -1,5 +1,4 @@
 <?php
-
 include('db_connection.php');
 
 $query="SELECT * FROM tracker_list ";
@@ -16,5 +15,6 @@ $json_response = json_encode($arr);
 
 // # Return the response
 echo $json_response;
+
 
 ?>
