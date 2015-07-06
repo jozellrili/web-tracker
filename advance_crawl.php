@@ -84,328 +84,327 @@
            		</div>
 
            	</div>
-           	
+				<?php
+				include('db_connection.php');
 
-<?php
-include('db_connection.php');
+					if(isset($_POST['submit1'])) {
+						$file = $_FILES["file"]["tmp_name"] ;
 
-	if(isset($_POST['submit1'])) {
-		$file = $_FILES["file"]["tmp_name"] ;
+						$i = 0;
+						$url = file($file, FILE_IGNORE_NEW_LINES);
+						$c = array();
 
-		$i = 0;
-		$url = file($file, FILE_IGNORE_NEW_LINES);
-		$c = array();
+					function get_links($url)
+					{	
 
-	function get_links($url)
-	{	
+						$doc = new DOMDocument();
+						global $c ,$base, $l, $base1;
+						foreach ($url as $urls) {
+							$doc->loadHTMLFile($urls);
+							$base_url = parse_url($urls, PHP_URL_HOST);
 
-		$doc = new DOMDocument();
-		global $c ,$base, $l, $base1;
-		foreach ($url as $urls) {
-			$doc->loadHTMLFile($urls);
-			$base_url = parse_url($urls, PHP_URL_HOST);
+							// fetching all stylesheet
+							foreach( $doc->getElementsByTagName('link') as $style){
 
-			// fetching all stylesheet
-			foreach( $doc->getElementsByTagName('link') as $style){
+								$href =  $style->getAttribute('href');
+								if (substr($href,0,2) == "//") {
+									$href = substr($href, 2);
 
-				$href =  $style->getAttribute('href');
-				if (substr($href,0,2) == "//") {
-					$href = substr($href, 2);
+								}
+								if (strpos($href, "#")) {
+									$href = substr($href, 0, strpos($href, "#"));
 
-				}
-				if (strpos($href, "#")) {
-					$href = substr($href, 0, strpos($href, "#"));
+								}
+								if (strpos($href, "?")) {
+									$href = substr($href, 0, strpos($href, "?"));
 
-				}
-				if (strpos($href, "?")) {
-					$href = substr($href, 0, strpos($href, "?"));
+								}
+								if (!in_array($base_url, $href, $c)) {
+									array_push($c, $href);
 
-				}
-				if (!in_array($base_url, $href, $c)) {
-					array_push($c, $href);
+									if (substr($base_url, 0, 4) == "www.") {
+									    $base[] = substr($base_url, 4);
+									}
+									
+								}
+								
+									
+							}
 
-					if (substr($base_url, 0, 4) == "www.") {
-					    $base[] = substr($base_url, 4);
+							// fetching all href
+							foreach($doc->getElementsByTagName('a') as $a){
+
+								$href =  $a->getAttribute('href');
+
+								if (strpos($href, "#")) {
+									$href = substr($href, 0, strpos($href, "#"));
+
+								}
+								if (strpos($href, "?")) {
+									$href = substr($href, 0, strpos($href, "?"));
+								}
+								if (substr($href,0,1) == ".") {
+									$href = substr($href, 1);
+								}
+								if (substr($href,0,7) == "http://") {
+									$href = $href;
+								}
+								else if (substr($href,0,8) == "https://") {
+									$href = $href;
+								}
+								else if (substr($href,0,2) == "//") {
+									$href = substr($href, 2);
+								}
+								else if (substr($href,0,1) == "#") {
+									$href = $url;
+								}
+								else if (substr($href,0,7) == "mailto:") {
+									$href = "[".$href."]";
+								}
+								else {
+									if (substr($href, 0, 1) != "/") {
+										$href = $base_url."/".$href;
+									}
+									else {
+										$href = $base_url.$href;
+									}
+								}	
+
+								if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
+									if (substr($href, 0, 8) == "https://") {
+										$href = "https://".$href;
+									}
+									else {
+										$href = "http://".$href;
+									}
+								}		
+								if (!in_array($href, $c)) {
+									array_push($c, $href);
+
+									if (substr($base_url, 0, 4) == "www.") {
+									    $base[] = substr($base_url, 4);
+									}
+									
+
+								}
+							
+							}
+							// // fetching all image
+							foreach( $doc->getElementsByTagName('img') as $image){
+
+								$href =  $image->getAttribute('src');
+								if (substr($href,0,2) == "//") {
+									$href = substr($href, 2);
+
+								}
+								if (strpos($href, "#")) {
+									$href = substr($href, 0, strpos($href, "#"));
+
+								}
+								if (strpos($href, "?")) {
+									$href = substr($href, 0, strpos($href, "?"));
+
+								}
+								if (!in_array($href, $c)) {
+									array_push($c, $href);
+
+									if (substr($base_url, 0, 4) == "www.") {
+									    $base[] = substr($base_url, 4);
+									}
+									
+								}
+								
+							}
+
+							//fetching all script
+							foreach( $doc->getElementsByTagName('script') as $scripts){
+
+								$href =  $scripts->getAttribute('src');
+
+								if (substr($href,0,2) == "//") {
+									$href = substr($href, 2);
+
+								}
+								if (strpos($href, "#")) {
+									$href = substr($href, 0, strpos($href, "#"));
+
+								}
+								if (strpos($href, "?")) {
+									$href = substr($href, 0, strpos($href, "?"));
+
+								}
+								
+								if (!in_array($href, $c)) {
+									array_push($c, $href);
+
+									if (substr($base_url, 0, 4) == "www.") {
+									    $base[] = substr($base_url, 4);
+									}			
+								}					
+							}
+						}
 					}
+					get_links($url);
+
+
 					
-				}
-				
-					
-			}
+					function get_domain($url) {
 
-			// fetching all href
-			foreach($doc->getElementsByTagName('a') as $a){
-
-				$href =  $a->getAttribute('href');
-
-				if (strpos($href, "#")) {
-					$href = substr($href, 0, strpos($href, "#"));
-
-				}
-				if (strpos($href, "?")) {
-					$href = substr($href, 0, strpos($href, "?"));
-				}
-				if (substr($href,0,1) == ".") {
-					$href = substr($href, 1);
-				}
-				if (substr($href,0,7) == "http://") {
-					$href = $href;
-				}
-				else if (substr($href,0,8) == "https://") {
-					$href = $href;
-				}
-				else if (substr($href,0,2) == "//") {
-					$href = substr($href, 2);
-				}
-				else if (substr($href,0,1) == "#") {
-					$href = $url;
-				}
-				else if (substr($href,0,7) == "mailto:") {
-					$href = "[".$href."]";
-				}
-				else {
-					if (substr($href, 0, 1) != "/") {
-						$href = $base_url."/".$href;
+							$pieces = parse_url($url);
+						    $domain = isset($pieces['host']) ? $pieces['host'] : '';
+							    if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
+							      $la = $regs['domain'];
+							      return $la;
+							    }		    
 					}
-					else {
-						$href = $base_url.$href;
-					}
-				}	
+						$theHost = get_domain($url);
 
-				if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
-					if (substr($href, 0, 8) == "https://") {
-						$href = "https://".$href;
-					}
-					else {
-						$href = "http://".$href;
-					}
-				}		
-				if (!in_array($href, $c)) {
-					array_push($c, $href);
 
-					if (substr($base_url, 0, 4) == "www.") {
-					    $base[] = substr($base_url, 4);
+
+					function classification($domain,$url) {
+
+						if (preg_match("/\b$domain\b/i", $url, $match)) {
+							$status = "Safe URL";
+						}
+						else {
+							$status = "Potential Tracker!"; 
+						}
+						return $status;
 					}
+
+
 					
 
-				}
-			
-			}
-			// // fetching all image
-			foreach( $doc->getElementsByTagName('img') as $image){
-
-				$href =  $image->getAttribute('src');
-				if (substr($href,0,2) == "//") {
-					$href = substr($href, 2);
-
-				}
-				if (strpos($href, "#")) {
-					$href = substr($href, 0, strpos($href, "#"));
-
-				}
-				if (strpos($href, "?")) {
-					$href = substr($href, 0, strpos($href, "?"));
-
-				}
-				if (!in_array($href, $c)) {
-					array_push($c, $href);
-
-					if (substr($base_url, 0, 4) == "www.") {
-					    $base[] = substr($base_url, 4);
+					function get_content_type($url){
+				        // our list of mime types
+						$mime_types = array(
+							"pdf"=>"application/pdf"
+							,"exe"=>"application/octet-stream"
+							,"zip"=>"application/zip"
+							,"docx"=>"application/msword"
+							,"doc"=>"application/msword"
+							,"xls"=>"application/vnd.ms-excel"
+							,"ppt"=>"application/vnd.ms-powerpoint"
+							,"gif"=>"image/gif"
+							,"png"=>"image/png"
+						    ,"ico"=>"image/ico"
+						    ,"jpeg"=>"image/jpg"
+						    ,"jpg"=>"image/jpg"
+						    ,"mp3"=>"audio/mpeg"
+						    ,"wav"=>"audio/x-wav"
+						    ,"mpeg"=>"video/mpeg"
+						    ,"mpg"=>"video/mpeg"
+						    ,"mpe"=>"video/mpeg"
+						    ,"mov"=>"video/quicktime"
+						    ,"avi"=>"video/x-msvideo"
+						    ,"3gp"=>"video/3gpp"
+						    ,"css"=>"text/css"
+						    ,"jsc"=>"application/javascript"
+						    ,"js"=>"application/javascript"
+						    ,"php"=>"text/html"
+						    ,"htm"=>"text/html"
+						    ,"html"=>"text/html"
+						    ,"xml"=>"application/xml"
+						         
+						);
+						$var = explode('.', $url);
+						$extension = strtolower(end($var));
+						if(isset($mime_types[$extension])){
+						    return $mime_types[$extension];
+						}
+						else{
+							return 'other';
+						}
 					}
+
+
+
+					function strposa($haystack, $needles=array()) {
+				        $chr = array();
+					        foreach($needles as $needle) {
+					                $res = strpos($haystack, $needle);
+					                if ($res !== false) $chr[$needle] = $res;
+					        }
+				        if(empty($chr)) return false;
+				        return min($chr);
+				     }
 					
+
+							
+				echo "
+				<div class='container'>
+				<div class='row'>
+				<table class ='table table-striped'>
+				<tbody>
+				<tr>
+				<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
+				</tr>
+				";
+				foreach (array_filter($c) as $index => $page) {
+				$i++;
+				$theDomain = get_domain($page);
+				$multipleDomain = $base[$index];
+				$match = classification($multipleDomain,$page);
+				$type = get_content_type($page);
+
+
+				//strip http/https before inserting into the database
+				if ((substr($page,0,7) == "http://")) {
+					$page = substr($page, 7);
+				} if ((substr($page,0,8) == "https://")){
+					$page = substr($page, 8);
+				} if ($theDomain =='') {
+					$pattern = '/\w+\..{2,3}(?:\..{2,3})?(?:$|(?=\/))/i';
+					if (preg_match($pattern, $page, $matches) === 1) {
+					    $theDomain = $matches[0];
+					}
 				}
-				
-			}
 
-			//fetching all script
-			foreach( $doc->getElementsByTagName('script') as $scripts){
 
-				$href =  $scripts->getAttribute('src');
 
-				if (substr($href,0,2) == "//") {
-					$href = substr($href, 2);
+				$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
+				$exceptions = array('fonts','favicon','favi');
+
+				if (strposa($page, $array) || ($match == "Potential Tracker!")) {
+					$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
+					$result = $conn->query($sql);
+
+						if ($result->num_rows > 0) {
+							$conn->query("UPDATE tracker_list SET requested_page = '".$multipleDomain."', domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
+						} else {
+
+							$conn->query("INSERT INTO tracker_list (requested_page, domain, url, type) VALUES ('".$multipleDomain."', '".$theDomain."', '".$page."', '".$type."')");
+						}
+					$icon = "fa fa-exclamation-triangle fa-lg";
+					$color = "red";
+
+				} else {
+
+					$icon = "fa fa-check-square fa-lg";
+					$color = "green";
+				}
+				if(strposa($page,$exceptions)) {
+
+					$icon = "fa fa-check-square fa-lg";
+					$color = "green";
 
 				}
-				if (strpos($href, "#")) {
-					$href = substr($href, 0, strpos($href, "#"));
+					
+					echo "
+					<tr>
+					<td>".$i."</td><td>".$base[$index]."</td><td>".$type."</td><td style='word-break:break-all;'>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>"."</td>
+					</tr>";
 
 				}
-				if (strpos($href, "?")) {
-					$href = substr($href, 0, strpos($href, "?"));
-
+					echo "
+					</tbody>
+					</table>
+					</div>
+					</div>
+					";
 				}
-				
-				if (!in_array($href, $c)) {
-					array_push($c, $href);
 
-					if (substr($base_url, 0, 4) == "www.") {
-					    $base[] = substr($base_url, 4);
-					}			
-				}					
-			}
-		}
-	}
-	get_links($url);
-
-
-	
-	function get_domain($url) {
-
-			$pieces = parse_url($url);
-		    $domain = isset($pieces['host']) ? $pieces['host'] : '';
-			    if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
-			      $la = $regs['domain'];
-			      return $la;
-			    }		    
-	}
-		$theHost = get_domain($url);
-
-
-
-	function classification($domain,$url) {
-
-		if (preg_match("/\b$domain\b/i", $url, $match)) {
-			$status = "Safe URL";
-		}
-		else {
-			$status = "Potential Tracker!"; 
-		}
-		return $status;
-	}
-
-
-	
-
-	function get_content_type($url){
-        // our list of mime types
-		$mime_types = array(
-			"pdf"=>"application/pdf"
-			,"exe"=>"application/octet-stream"
-			,"zip"=>"application/zip"
-			,"docx"=>"application/msword"
-			,"doc"=>"application/msword"
-			,"xls"=>"application/vnd.ms-excel"
-			,"ppt"=>"application/vnd.ms-powerpoint"
-			,"gif"=>"image/gif"
-			,"png"=>"image/png"
-		    ,"ico"=>"image/ico"
-		    ,"jpeg"=>"image/jpg"
-		    ,"jpg"=>"image/jpg"
-		    ,"mp3"=>"audio/mpeg"
-		    ,"wav"=>"audio/x-wav"
-		    ,"mpeg"=>"video/mpeg"
-		    ,"mpg"=>"video/mpeg"
-		    ,"mpe"=>"video/mpeg"
-		    ,"mov"=>"video/quicktime"
-		    ,"avi"=>"video/x-msvideo"
-		    ,"3gp"=>"video/3gpp"
-		    ,"css"=>"text/css"
-		    ,"jsc"=>"application/javascript"
-		    ,"js"=>"application/javascript"
-		    ,"php"=>"text/html"
-		    ,"htm"=>"text/html"
-		    ,"html"=>"text/html"
-		    ,"xml"=>"application/xml"
-		         
-		);
-		$var = explode('.', $url);
-		$extension = strtolower(end($var));
-		if(isset($mime_types[$extension])){
-		    return $mime_types[$extension];
-		}
-		else{
-			return 'other';
-		}
-	}
-
-
-
-	function strposa($haystack, $needles=array()) {
-        $chr = array();
-	        foreach($needles as $needle) {
-	                $res = strpos($haystack, $needle);
-	                if ($res !== false) $chr[$needle] = $res;
-	        }
-        if(empty($chr)) return false;
-        return min($chr);
-     }
-	
-
-			
-echo "
-<div class='container'>
-<div class='row'>
-<table class ='table table-striped'>
-<tbody>
-<tr>
-<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
-</tr>
-";
-foreach (array_filter($c) as $index => $page) {
-$i++;
-$theDomain = get_domain($page);
-$multipleDomain = $base[$index];
-$match = classification($multipleDomain,$page);
-$type = get_content_type($page);
-
-
-//strip http/https before inserting into the database
-if ((substr($page,0,7) == "http://")) {
-	$page = substr($page, 7);
-} if ((substr($page,0,8) == "https://")){
-	$page = substr($page, 8);
-} if ($theDomain =='') {
-	$pattern = '/\w+\..{2,3}(?:\..{2,3})?(?:$|(?=\/))/i';
-	if (preg_match($pattern, $page, $matches) === 1) {
-	    $theDomain = $matches[0];
-	}
-}
-
-
-
-$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
-$xeception = array('fonts','faveicon','fave');
-
-if (strposa($page, $array) || ($match == "Potential Tracker!")) {
-	$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
-	$result = $conn->query($sql);
-
-		if ($result->num_rows > 0) {
-			$conn->query("UPDATE tracker_list SET requested_page = '".$multipleDomain."', domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
-		} else {
-
-			$conn->query("INSERT INTO tracker_list (requested_page, domain, url, type) VALUES ('".$multipleDomain."', '".$theDomain."', '".$page."', '".$type."')");
-		}
-	$icon = "fa fa-exclamation-triangle fa-lg";
-	$color = "red";
-
-} else if(strposa($page,$exception)) {
-
-	$icon = "fa fa-check-square fa-lg";
-	$color = "green";
-
-} else {
-
-	$icon = "fa fa-check-square fa-lg";
-	$color = "green";
-}
-	
-	echo "
-	<tr>
-	<td>".$i."</td><td>".$base[$index]."</td><td>".$type."</td><td style='word-break:break-all;'>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>"."</td>
-	</tr>";
-
-}
-	echo "
-	</tbody>
-	</table>
-	</div>
-	</div>
-	";
-}
-
-?>
+				?>
 
 </div>
 </div>
