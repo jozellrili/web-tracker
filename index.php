@@ -379,7 +379,7 @@
 								$color = "green";
 							}
 
-							 if(strposa($page,$exceptions)) {
+							if(strposa($page,$exceptions)) {
 
 								$icon = "fa fa-check-square fa-lg";
 								$color = "green";
