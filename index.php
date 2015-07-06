@@ -128,10 +128,12 @@
 							$href = substr($href, 0, strpos($href, "#"));
 
 							}
+
 							if (strpos($href, "?")) {
 								$href = substr($href, 0, strpos($href, "?"));
 
 							}
+
 					        if (!in_array($href, $c)) {
 							array_push($c, $href);
 
@@ -205,6 +207,7 @@
 								$href = substr($href, 0, strpos($href, "?"));
 
 							}
+
 						  	if (!in_array($href, $c)) {
 								array_push($c, $href);
 							 }						
@@ -226,6 +229,7 @@
 								$href = substr($href, 0, strpos($href, "?"));
 
 							}
+
 
 						     if (!in_array($href, $c)) {
 								array_push($c, $href);
@@ -335,7 +339,7 @@
 						<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
 						</tr>
 						";
-
+						
 						foreach (array_filter($c) as $index => $page) {
 						$i++;
 						$theDomain = get_domain($page);
@@ -370,16 +374,17 @@
 								$icon = "fa fa-exclamation-triangle fa-lg";
 								$color = "red";
 							
-							} else if(strposa($page,$exceptions)) {
-
-								$icon = "fa fa-check-square fa-lg";
-								$color = "green";
-
-							} else {
-
+							}	else {
 								$icon = "fa fa-check-square fa-lg";
 								$color = "green";
 							}
+
+							 if(strposa($page,$exceptions)) {
+
+								$icon = "fa fa-check-square fa-lg";
+								$color = "green";
+
+							} 
 							//echo $page."--".$color."<br />";
 
 						echo "
