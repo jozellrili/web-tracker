@@ -103,6 +103,7 @@
             <th>URL&nbsp;<a ng-click="sort_by('url');"><i class="glyphicon glyphicon-sort"></i></a></th>
             <th>TYPE&nbsp;<a ng-click="sort_by('type');"><i class="glyphicon glyphicon-sort"></i></a></th>
             <th>ACTION</th>
+            <th>DO</th>
         
             </thead>
             <tbody>
@@ -114,7 +115,7 @@
                     <td>{{data.url}}</td>
                     <td>{{data.type}}</td>
                     <td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs" name="btn[]" data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
-   
+                    <td><a id = "del-btn" ng-href="delete_data.php?id={{ data.id }}">Remove</a></td>
                 </tr>
             </tbody>
             </table>
@@ -133,7 +134,7 @@
        
       </div>
         <div class="modal-footer ">
-        <button name="submit" type="submit" class="btn btn-success" ><span class="glyphicon glyphicon-ok-sign"></span> Yes</button>
+        <button name="submit" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok-sign"></span> Yes</button>
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> No</button>
       </div>
         </div>
@@ -156,23 +157,7 @@
     </div>
 </div>
 </div>
-<?php
-include ('db_connection.php');
-if(isset($_POST['submit']))
-{
- 
-$sql = "DELETE FROM tracker_list WHERE id = id ";
 
-if (mysqli_query($conn, $sql)) {
-    echo "Record deleted successfully";
-} else {
-    echo "Error deleting record: " . mysqli_error($conn);
-}
-
-mysqli_close($conn);
-}
-
-?>
 <script src="js/jquery.js"></script>
 <script>
 function downloadcsv() {
