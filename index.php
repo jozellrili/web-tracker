@@ -341,7 +341,7 @@
 						$theDomain = get_domain($page);
 						$match = classification($theHost,$page);
 						$type = get_content_type($page);
-						$exceptions = array('fonts','fav','favicon');
+						$exceptions = array('fonts','favi','favicon');	
 						$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
 
 							//strip http/https before inserting into the database
@@ -357,7 +357,7 @@
 							}
 
 
-							 if (strposa($page, $array) || ($match == "Potential Tracker!")) {
+							if (strposa($page, $array) || ($match == "Potential Tracker!")) {
 								$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 								$result = $conn->query($sql);
 
@@ -372,8 +372,9 @@
 							
 							} else if(strposa($page,$exceptions)) {
 
-									$icon = "fa fa-check-square fa-lg";
-									$color = "green";
+								$icon = "fa fa-check-square fa-lg";
+								$color = "green";
+
 							} else {
 
 								$icon = "fa fa-check-square fa-lg";
