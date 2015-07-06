@@ -1,12 +1,9 @@
 <?php
-$DB_HOST = 'localhost';
-$DB_USER = 'root';
-$DB_PASS = 'test123';
-$DB_NAME = 'tracker';
-$mysqli = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 
-$query="SELECT * from tracker_list ";
-$result = $mysqli->query($query) or die($mysqli->error.__LINE__);
+include('db_connection.php');
+
+$query="SELECT * FROM tracker_list ";
+$result = $conn->query($query);
 
 $arr = array();
 if($result->num_rows > 0) {
@@ -19,4 +16,5 @@ $json_response = json_encode($arr);
 
 // # Return the response
 echo $json_response;
+
 ?>
