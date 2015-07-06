@@ -123,7 +123,10 @@ include('db_connection.php');
 				}
 				if (!in_array($base_url, $href, $c)) {
 					array_push($c, $href);
-					$base[] = $base_url;
+
+					if (substr($base_url, 0, 4) == "www.") {
+					    $base[] = substr($base_url, 4);
+					}
 					
 				}
 				
@@ -179,7 +182,10 @@ include('db_connection.php');
 				}		
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
-					$base[] = $base_url;
+
+					if (substr($base_url, 0, 4) == "www.") {
+					    $base[] = substr($base_url, 4);
+					}
 					
 
 				}
@@ -203,7 +209,10 @@ include('db_connection.php');
 				}
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
-					$base[] = $base_url;
+
+					if (substr($base_url, 0, 4) == "www.") {
+					    $base[] = substr($base_url, 4);
+					}
 					
 				}
 				
@@ -226,17 +235,12 @@ include('db_connection.php');
 					$href = substr($href, 0, strpos($href, "?"));
 
 				}
-				if (substr($href, 0, 1) != "/") {
-						$href = $base_url."/".$href;
-					}
 				
 				if (!in_array($href, $c)) {
 					array_push($c, $href);
-					$l[] = $href;
-					$base[] = $base_url;
 
 					if (substr($base_url, 0, 4) == "www.") {
-					    $base1[] = substr($base_url, 4);
+					    $base[] = substr($base_url, 4);
 					}			
 				}					
 			}
@@ -327,42 +331,6 @@ include('db_connection.php');
         return min($chr);
      }
 	
-	//check if exist in database, if not insert.
-	 foreach (array_filter($l) as $key => $value) {
-	 	
-	 	$theDomain = get_domain($value);
-	 	$multipleDomain = $base1[$key];
-		$match = classification($multipleDomain,$value);
-		$type = get_content_type($value);
-		
-			//strip http and https before inserting into the database
-			if ((substr($value,0,7) == "http://")) {
-				$value = substr($value, 7);
-			} else if ((substr($value,0,8) == "https://")){
-				$value = substr($value, 8);
-			}else if ($theDomain =='') {
-				$pattern = '/\w+\..{2,3}(?:\..{2,3})?(?:$|(?=\/))/i';
-				if (preg_match($pattern, $value, $matches) === 1) {
-					$theDomain = $matches[0];
-				}
-			}
-
-
-			$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
-
-			if (strposa($value, $array) || ($match == "Potential Tracker!")) {
-				$sql = "SELECT * FROM tracker_list WHERE url = '".$value."' ";
-				$result = $conn->query($sql);
-
-					if ($result->num_rows > 0) {
-						$conn->query("UPDATE tracker_list SET domain = '".$theDomain."', url = '".$value."', type = '".$type."'  WHERE url = '".$value."' ");
-					} else {
-
-						$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$value."', '".$type."')");
-					 }  
-					
-			} 		 	
-	}
 
 			
 echo "
@@ -374,30 +342,58 @@ echo "
 <th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
 </tr>
 ";
-//for output
 foreach (array_filter($c) as $index => $page) {
 $i++;
-	if ((substr($page,0,7) == "http://")) {
-				$page = substr($page, 7);
-			} else if ((substr($page,0,8) == "https://")){
-				$page = substr($page, 8);
-				}
+$theDomain = get_domain($page);
+$multipleDomain = $base[$index];
+$match = classification($multipleDomain,$page);
+$type = get_content_type($page);
 
+
+//strip http/https before inserting into the database
+if ((substr($page,0,7) == "http://")) {
+	$page = substr($page, 7);
+} if ((substr($page,0,8) == "https://")){
+	$page = substr($page, 8);
+} if ($theDomain =='') {
+	$pattern = '/\w+\..{2,3}(?:\..{2,3})?(?:$|(?=\/))/i';
+	if (preg_match($pattern, $page, $matches) === 1) {
+	    $theDomain = $matches[0];
+	}
+}
+
+
+
+$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
+$xeception = array('fonts','faveicon','fave');
+
+if (strposa($page, $array) || ($match == "Potential Tracker!")) {
 	$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 	$result = $conn->query($sql);
 
-	if ($result->num_rows > 0) {
-		$icon = "fa fa-exclamation-triangle fa-lg";
-		$color = "red";
-	    
-	} else {
-	    $icon = "fa fa-check-square fa-lg";
-		$color = "green";
-	}
+		if ($result->num_rows > 0) {
+			$conn->query("UPDATE tracker_list SET requested_page = '".$multipleDomain."', domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
+		} else {
+
+			$conn->query("INSERT INTO tracker_list (requested_page, domain, url, type) VALUES ('".$multipleDomain."', '".$theDomain."', '".$page."', '".$type."')");
+		}
+	$icon = "fa fa-exclamation-triangle fa-lg";
+	$color = "red";
+
+} else if(strposa($page,$exception)) {
+
+	$icon = "fa fa-check-square fa-lg";
+	$color = "green";
+
+} else {
+
+	$icon = "fa fa-check-square fa-lg";
+	$color = "green";
+}
 	
 	echo "
 	<tr>
-	<td>".$i."</td><td>".$base[$index]."</td><td>".get_content_type($page)."</td><td style='word-break:break-all;'>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>"."</td>
+	<td>".$i."</td><td>".$base[$index]."</td><td>".$type."</td><td style='word-break:break-all;'>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>"."</td>
 	</tr>";
 
 }

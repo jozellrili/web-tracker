@@ -146,6 +146,9 @@
 							if (strpos($href, "#")) {
 								$href = substr($href, 0, strpos($href, "#"));
 							}
+							if (strpos($href, "?")) {
+								$href = substr($href, 0, strpos($href, "?"));
+							}
 							if (substr($href,0,1) == ".") {
 								$href = substr($href, 1);
 							}
@@ -322,44 +325,6 @@
 				     }
 
 
-				      
-				     //check if exist in database, if not insert.
-				     foreach (array_filter($l) as $key => $value) {
-				     	
-				     	$theDomain = get_domain($value);
-						$match = classification($theHost,$value);
-						$type = get_content_type($value);	
-						
-							//strip http and https before inserting into the database
-							if ((substr($value,0,7) == "http://")) {
-								$value = substr($value, 7);
-							} else if ((substr($value,0,8) == "https://")){
-								$value = substr($value, 8);
-							} else if ($theDomain =='') {
-								$pattern = '/\w+\..{2,3}(?:\..{2,3})?(?:$|(?=\/))/i';
-								if (preg_match($pattern, $value, $matches) === 1) {
-								    $theDomain = $matches[0];
-								}
-							}
-
-
-
-							$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
-
-							if (strposa($value, $array) || ($match == "Potential Tracker!")) {
-								$sql = "SELECT * FROM tracker_list WHERE url = '".$value."' ";
-								$result = $conn->query($sql);
-
-									if ($result->num_rows > 0) {
-										$conn->query("UPDATE tracker_list SET domain = '".$theDomain."', url = '".$value."', type = '".$type."'  WHERE url = '".$value."' ");
-									} else {
-
-										$conn->query("INSERT INTO tracker_list (domain, url, type) VALUES ('".$theDomain."', '".$value."', '".$type."')");
-									 }   
-							} 
-				    }
-
-
 
 						echo "
 						
@@ -373,28 +338,53 @@
 
 						foreach (array_filter($c) as $index => $page) {
 						$i++;
-							
+						$theDomain = get_domain($page);
+						$match = classification($theHost,$page);
+						$type = get_content_type($page);
+						$exceptions = array('fonts','fave','faveicon');	
+						$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
+
+							//strip http/https before inserting into the database
 							if ((substr($page,0,7) == "http://")) {
 								$page = substr($page, 7);
-							} else if ((substr($page,0,8) == "https://")){
+							} if ((substr($page,0,8) == "https://")){
 								$page = substr($page, 8);
+							} if ($theDomain =='') {
+								$pattern = '/\w+\..{2,3}(?:\..{2,3})?(?:$|(?=\/))/i';
+								if (preg_match($pattern, $page, $matches) === 1) {
+								    $theDomain = $matches[0];
 								}
+							}
 
-							$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
-							$result = $conn->query($sql);
 
-							if ($result->num_rows > 0) {
+							if (strposa($page, $array) || ($match == "Potential Tracker!")) {
+								$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
+								$result = $conn->query($sql);
+
+									if ($result->num_rows > 0) {
+										$conn->query("UPDATE tracker_list SET requested_page = '".$theHost."', domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
+									} else {
+
+										$conn->query("INSERT INTO tracker_list (requested_page, domain, url, type) VALUES ('".$theHost."', '".$theDomain."', '".$page."', '".$type."')");
+									}
 								$icon = "fa fa-exclamation-triangle fa-lg";
 								$color = "red";
-							    
+							
+							} else if(strposa($page,$exceptions)) {
+
+								$icon = "fa fa-check-square fa-lg";
+								$color = "green";
+
 							} else {
-							    $icon = "fa fa-check-square fa-lg";
+
+								$icon = "fa fa-check-square fa-lg";
 								$color = "green";
 							}
+							//echo $page."--".$color."<br />";
 
 						echo "
 						<tr>
-						<td >".$i."</td><td>".get_domain($url)."</td><td>".get_content_type($page)."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
+						<td >".$i."</td><td>".get_domain($url)."</td><td>".$type."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
 						</tr>
 						</div>
 						";
