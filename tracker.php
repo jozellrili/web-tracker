@@ -109,7 +109,7 @@
                     <td>{{data.id}}</td>
                     <td>{{data.requested_page}}</td>
                     <td>{{data.domain}}</td>
-                    <td>{{data.url}}</td>
+                    <td class="word-break"><a target="_blank" href="http://{{data.url}}">{{data.url}}</a></td>
                     <td>{{data.type}}</td>
                     <td><p data-placement="top" data-toggle="tooltip" title="Delete"><button id="del-btn" ng-href="delete_data.php?id={{ data.id }}" class="btn btn-danger btn-xs"  data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
                    
@@ -137,7 +137,7 @@
             </div>
         </div>
         <div class="col-md-12" ng-show="filteredItems > 0">    
-            <div pagination="" page="currentPage" on-select-page="setPage(page)" boundary-links="true" total-items="filteredItems" items-per-page="entryLimit" class="pagination-small" previous-text="&laquo;" next-text="&raquo;"></div>
+           <pagination total-items="totalItems" on-select-page="setPage(page)" page="currentPage" max-size="entryLimit" class="pagination-small" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
             
             
         </div>
