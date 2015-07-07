@@ -383,12 +383,25 @@
 					$icon = "fa fa-check-square fa-lg";
 					$color = "green";
 				}
+				
 				if(strposa($page,$exceptions)) {
+					foreach($exceptions as $e) {
+
+						$query= "SELECT * FROM tracker_list WHERE url LIKE '%$e%' ";
+						$result = $conn->query($query);
+
+						if($result->num_rows > 0) {
+							while($row = $result->fetch_assoc()) {
+								$a = $row['url'];
+								$conn->query("DELETE FROM tracker_list WHERE url = '".$a."' ");
+							}
+						}
+					}
 
 					$icon = "fa fa-check-square fa-lg";
 					$color = "green";
 
-				}
+				} 
 					
 					echo "
 					<tr>
