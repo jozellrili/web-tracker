@@ -84,6 +84,7 @@
            		</div>
             </div>
             	<?php
+            	set_time_limit(0);
 				include('db_connection.php');
 
 
