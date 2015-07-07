@@ -85,6 +85,7 @@
 
            	</div>
 				<?php
+				set_time_limit(0);
 				include('db_connection.php');
 
 					if(isset($_POST['submit1'])) {
@@ -405,7 +406,7 @@
 					
 					echo "
 					<tr>
-					<td>".$i."</td><td>".$base[$index]."</td><td>".$type."</td><td style='word-break:break-all;'>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>"."</td>
+					<td>".$i."</td><td>".$base[$index]."</td><td>".$type."</td><td class='word-break'>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label>"."</td>
 					</tr>";
 
 				}
