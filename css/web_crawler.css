@@ -60,3 +60,6 @@ input[readonly] {
   margin-top: 65px;
   /*padding-bottom: 165px;*/
 }
+.word-break{
+  word-break:break-all;
+}
