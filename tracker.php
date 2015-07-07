@@ -96,53 +96,40 @@
         <div class="col-md-12" ng-show="filteredItems > 0">
             <table class="table table-striped table-bordered">
             <thead>
-            <th><input type="checkbox" id="checkall" /></th>
             <th>NO.&nbsp;<a ng-click="sort_by('id');"><i class="glyphicon glyphicon-sort"></i></a></th>
             <th>REQUESTED PAGE.&nbsp;<a ng-click="sort_by('requested_page');"><i class="glyphicon glyphicon-sort"></i></a></th>
             <th>DOMAIN NAME&nbsp;<a ng-click="sort_by('domain');"><i class="glyphicon glyphicon-sort"></i></a></th>
             <th>URL&nbsp;<a ng-click="sort_by('url');"><i class="glyphicon glyphicon-sort"></i></a></th>
             <th>TYPE&nbsp;<a ng-click="sort_by('type');"><i class="glyphicon glyphicon-sort"></i></a></th>
             <th>ACTION</th>
-            <th>DO</th>
-        
+           
             </thead>
             <tbody>
                 <tr ng-repeat="data in filtered = (list | filter:search | orderBy : predicate :reverse) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
-                    <td><input id="checkbox1" name="checkbox1" type="checkbox" class="checkthis" /></td>
                     <td>{{data.id}}</td>
                     <td>{{data.requested_page}}</td>
                     <td>{{data.domain}}</td>
                     <td>{{data.url}}</td>
                     <td>{{data.type}}</td>
-                    <td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs" name="btn[]" data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
-                    <td><a id = "del-btn" ng-href="delete_data.php?id={{ data.id }}">Remove</a></td>
+                    <td><p data-placement="top" data-toggle="tooltip" title="Delete"><button id="del-btn" ng-href="delete_data.php?id={{ data.id }}" class="btn btn-danger btn-xs"  data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
+                   
                 </tr>
             </tbody>
             </table>
         </div>
-        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+       
             <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
         <div class="modal-dialog">
     <div class="modal-content">
-          <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-        <h4 class="modal-title custom_align" id="Heading">Delete this entry</h4>
-      </div>
-          <div class="modal-body">
-       
-       <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to delete this Record?</div>
-       
-      </div>
-        <div class="modal-footer ">
-        <button name="submit" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok-sign"></span> Yes</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> No</button>
-      </div>
+         
+          
+        
         </div>
     <!-- /.modal-content --> 
   </div>
       <!-- /.modal-dialog --> 
     </div>
-    </form>
+    
 
         <div class="col-md-12" ng-show="filteredItems == 0">
             <div class="col-md-offset-5">
@@ -164,25 +151,7 @@ function downloadcsv() {
     window.open("export.php");
 }
 </script>
-<script>
-    $(document).ready(function(){
-$("#mytable #checkall").click(function () {
-        if ($("#mytable #checkall").is(':checked')) {
-            $("#mytable input[type=checkbox]").each(function () {
-                $(this).prop("checked", true);
-            });
 
-        } else {
-            $("#mytable input[type=checkbox]").each(function () {
-                $(this).prop("checked", false);
-            });
-        }
-    });
-    
-    $("[data-toggle=tooltip]").tooltip();
-});
-
-</script>
 <script src="js/angular.min.js"></script>
 <script src="js/ui-bootstrap-tpls-0.10.0.min.js"></script>
 <script src="js/app.js"></script>   
