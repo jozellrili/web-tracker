@@ -91,6 +91,10 @@
         </div>
         
     </div>
+    <div class="row col-md-5">
+    
+        <label class="row col-md-5 label-control">Total No. of Records:</label><p>{{ totalItems}}</p>
+    </div>
     <br/>
     <div class="row">
         <div class="col-md-12" ng-show="filteredItems > 0">
