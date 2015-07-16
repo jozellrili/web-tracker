@@ -110,7 +110,8 @@
             </thead>
             <tbody>
                 <tr ng-repeat="data in filtered = (list | filter:search | orderBy : predicate :reverse) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
-                    <td>{{data.id}}</td>
+                    <td class="hidden">{{data.id}}</td>
+                    <td>{{filtered.indexOf(data)+1}}</td>
                     <td>{{data.requested_page}}</td>
                     <td>{{data.domain}}</td>
                     <td class="word-break"><a target="_blank" href="http://{{data.url}}">{{data.url}}</a></td>
@@ -141,8 +142,9 @@
             </div>
         </div>
         <div class="col-md-12" ng-show="filteredItems > 0">    
-           <pagination total-items="totalItems" on-select-page="setPage(page)" page="currentPage" max-size="entryLimit" class="pagination-small" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+           <pagination total-items="filteredItems" on-select-page="setPage(page)" page="currentPage" items-per-page="entryLimit" max-size="entryLimit" class="pagination-small" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
             
+           
             
         </div>
     </div>
