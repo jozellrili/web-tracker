@@ -76,8 +76,8 @@
                     <input type="text" name="url" id="url" class="form-control" placeholder="http://www.example.com">
                     <a type="button" href="advance_crawl.php" class="btn-link" ><i><u>Advance Crawl</u></i></a>
                     </div>
-                    <input type="submit" name="submit" class="btn btn-danger" value="Start Crawling">
-                </form>
+                     <input type="submit" name="submit" class="btn btn-danger" onclick="waitingDialog.show('Crawling...');(function () {waitingDialog.hide();}, 2000);" value="Start Crawling">
+               </form>
                 <div class="form col-md-7">
                 <h4>The URL's you submit for crawling are recorded.</h4>
    
@@ -102,12 +102,83 @@
 
 					$c = array();
 					$i = 0;
+					$l = array();
 
 					$url = $_POST['url'];
+
 
 						if ((substr($url,0,7) != "http://")) {
 							$url = "http://".$url;
 						}
+
+					function urlLooper($url) {
+
+						global $l;
+						$doc = new DOMDocument();
+						libxml_use_internal_errors(true);
+						$doc->loadHTMLFile($url);
+						libxml_clear_errors();
+						$base_url = parse_url($url, PHP_URL_HOST);
+
+						// fetching all href
+						foreach( $doc->getElementsByTagName('a') as $a){
+						   
+						    $href =  $a->getAttribute('href');
+						 
+							if (strpos($href, "#")) {
+								$href = substr($href, 0, strpos($href, "#"));
+							}
+							if (strpos($href, "?")) {
+								$href = substr($href, 0, strpos($href, "?"));
+							}
+							if (substr($href,0,1) == ".") {
+								$href = substr($href, 1);
+							}
+							if (substr($href,0,7) == "http://") {
+								$href = $href;
+							}
+							else if (substr($href,0,8) == "https://") {
+								$href = $href;
+							}
+							else if (substr($href,0,2) == "//") {
+								$href = substr($href, 2);
+							}
+							else if (substr($href,0,1) == "#") {
+								$href = $url;
+							}
+							else if (substr($href,0,7) == "mailto:") {
+								$href = "[".$href."]";
+							}
+							else {
+								if (substr($href, 0, 1) != "/") {
+									$href = $base_url."/".$href;
+								}
+								else {
+									$href = $base_url.$href;
+									}
+							}	
+
+							if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
+								if (substr($href, 0, 8) == "https://") {
+									$href = "https://".$href;
+								}
+								else {
+									$href = "http://".$href;
+								}
+							}
+							// if (!in_array($href, $c)) {
+							// 	array_push($c, $href);
+								
+							// }
+
+							if (preg_match("/\b$base_url\b/i", $href, $match)) {
+				  				array_push($l, $href);
+							}
+			   
+						}
+					}
+					urlLooper($url);
+
 
 					function get_links($url)
 					{	
@@ -141,7 +212,7 @@
 						 	}					
 						}
 
-					// fetching all href
+						// fetching all href
 						foreach( $doc->getElementsByTagName('a') as $a){
 						   
 						    $href =  $a->getAttribute('href');
@@ -234,14 +305,14 @@
 
 						     if (!in_array($href, $c)) {
 								array_push($c, $href);
-								$l[] = $href;
+								//$l[] = $href;
 
 							 }									
 						}
 							
 					}
 
-					get_links($url);
+					//get_links($url);
 
 
 					function get_domain($url) {
@@ -330,6 +401,13 @@
 				     }
 
 
+				     $links = array_unique($l);
+				     foreach ($links as $link) {
+				     	//echo $link."<br />";
+				     	get_links($link);
+				     }
+
+
 
 						echo "
 						
@@ -402,7 +480,7 @@
 
 						echo "
 						<tr>
-						<td >".$i."</td><td>".get_domain($url)."</td><td>".$type."</td><td>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
+						<td >".$i."</td><td>".get_domain($url)."</td><td>".$type."</td><td class='word-break'>".$page."</td><td>"."<label class ='".$icon."' style='color:".$color."'></label></td>
 						</tr>
 						</div>
 						";
@@ -426,6 +504,7 @@
 
 <!-- jQuery -->
 <script src="js/jquery.js"></script>
+<script src="js/loading.js"></script>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
