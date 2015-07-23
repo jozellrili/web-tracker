@@ -34,7 +34,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
               </button>
-                 <a class="navbar-brand topnav" href="#">
+                 <a class="navbar-brand topnav" href="index.php">
                     <img src="img/logo.gif" alt="" class="img-responsive">
                 </a>
 
@@ -75,7 +75,7 @@
             </div>
                    <a class="btn-link" href="index.php"><i><u>Basic Crawl</u></i></a>
                     </div>
-                    <input type="submit" name="submit1" class="btn btn-danger" value="Start Crawling">
+                   <input type="submit" name="submit1" class="btn btn-danger" onclick="waitingDialog.show('Crawling...');(function () {waitingDialog.hide();}, 2000);" value="Start Crawling">
                 </form>
                
                 <div class="form col-md-7">
@@ -94,15 +94,81 @@
 						$i = 0;
 						$url = file($file, FILE_IGNORE_NEW_LINES);
 						$c = array();
+						$l = array();
 
-					function get_links($url)
-					{	
 
+					function urlLooper($urls) {
+
+						global $l;
 						$doc = new DOMDocument();
-						global $c ,$base, $l, $base1;
-						foreach ($url as $urls) {
-							$doc->loadHTMLFile($urls);
-							$base_url = parse_url($urls, PHP_URL_HOST);
+						foreach ($urls as $url) {
+							$doc->loadHTMLFile($url);
+							$base_url = parse_url($url, PHP_URL_HOST);
+
+						// fetching all href
+						foreach( $doc->getElementsByTagName('a') as $a){
+						   
+						    $href =  $a->getAttribute('href');
+						 
+							if (strpos($href, "#")) {
+								$href = substr($href, 0, strpos($href, "#"));
+							}
+							if (strpos($href, "?")) {
+								$href = substr($href, 0, strpos($href, "?"));
+							}
+							if (substr($href,0,1) == ".") {
+								$href = substr($href, 1);
+							}
+							if (substr($href,0,7) == "http://") {
+								$href = $href;
+							}
+							else if (substr($href,0,8) == "https://") {
+								$href = $href;
+							}
+							else if (substr($href,0,2) == "//") {
+								$href = substr($href, 2);
+							}
+							else if (substr($href,0,1) == "#") {
+								$href = $url;
+							}
+							else if (substr($href,0,7) == "mailto:") {
+								$href = "[".$href."]";
+							}
+							else {
+								if (substr($href, 0, 1) != "/") {
+									$href = $base_url."/".$href;
+								}
+								else {
+									$href = $base_url.$href;
+									}
+							}	
+
+							if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
+								if (substr($href, 0, 8) == "https://") {
+									$href = "https://".$href;
+								}
+								else {
+									$href = "http://".$href;
+								}
+							}
+
+							if (preg_match("/\b$base_url\b/i", $href, $match)) {
+				  				array_push($l, $href);
+							}
+			   
+						}
+					}
+				}
+				urlLooper($url);
+
+
+					function get_links($url) {	
+
+						global $c, $base;
+						$doc = new DOMDocument();
+					    //foreach ($url as $urls) {
+							$doc->loadHTMLFile($url);
+							$base_url = parse_url($url, PHP_URL_HOST);
 
 							// fetching all stylesheet
 							foreach( $doc->getElementsByTagName('link') as $style){
@@ -243,9 +309,9 @@
 									}			
 								}					
 							}
-						}
+							//}
 					}
-					get_links($url);
+					//get_links($url);
 
 
 					
@@ -331,6 +397,10 @@
 				     }
 					
 
+				$links = array_unique($l);
+			    foreach ($links as $link) {
+			     	get_links($link);
+			    }
 							
 				echo "
 				<div class='container'>
@@ -425,6 +495,7 @@
 
 <!-- jQuery -->
 <script src="js/jquery.js"></script>
+<script src="js/loading.js"></script>
 <!-- script browse button -->
 <script type="text/javascript">
 $(document).on('change', '.btn-file :file', function() {
@@ -455,4 +526,3 @@ $(document).ready( function() {
 
 </body>
 </html>
-
