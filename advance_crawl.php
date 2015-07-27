@@ -99,11 +99,65 @@
 
 					function urlLooper($urls) {
 
-						global $l;
+						global $l, $c,$base;
 						$doc = new DOMDocument();
 						foreach ($urls as $url) {
 							$doc->loadHTMLFile($url);
 							$base_url = parse_url($url, PHP_URL_HOST);
+
+						foreach( $doc->getElementsByTagName('link') as $style){
+
+							$href =  $style->getAttribute('href');
+							if (substr($href,0,2) == "//") {
+								$href = substr($href, 2);
+
+							}
+							if (strpos($href, "#")) {
+								$href = substr($href, 0, strpos($href, "#"));
+
+							}
+							if (strpos($href, "?")) {
+								$href = substr($href, 0, strpos($href, "?"));
+
+							}
+							if (!in_array($base_url, $href, $c)) {
+								array_push($c, $href);
+
+								if (substr($base_url, 0, 4) == "www.") {
+								    $base[] = substr($base_url, 4);
+								}
+								
+							}
+								
+									
+						}
+
+						//fetching all the images
+						foreach( $doc->getElementsByTagName('img') as $image){
+
+								$href =  $image->getAttribute('src');
+								if (substr($href,0,2) == "//") {
+									$href = substr($href, 2);
+
+								}
+								if (strpos($href, "#")) {
+									$href = substr($href, 0, strpos($href, "#"));
+
+								}
+								if (strpos($href, "?")) {
+									$href = substr($href, 0, strpos($href, "?"));
+
+								}
+								if (!in_array($href, $c)) {
+									array_push($c, $href);
+
+									if (substr($base_url, 0, 4) == "www.") {
+									    $base[] = substr($base_url, 4);
+									}
+									
+								}
+								
+							}
 
 						// fetching all href
 						foreach( $doc->getElementsByTagName('a') as $a){
@@ -152,6 +206,14 @@
 								}
 							}
 
+							if (!in_array($href, $c)) {
+								array_push($c, $href);
+
+									if (substr($base_url, 0, 4) == "www.") {
+									    $base[] = substr($base_url, 4);
+									}	
+								}
+
 							if (preg_match("/\b$base_url\b/i", $href, $match)) {
 				  				array_push($l, $href);
 							}
@@ -170,118 +232,6 @@
 							$doc->loadHTMLFile($url);
 							$base_url = parse_url($url, PHP_URL_HOST);
 
-							// fetching all stylesheet
-							foreach( $doc->getElementsByTagName('link') as $style){
-
-								$href =  $style->getAttribute('href');
-								if (substr($href,0,2) == "//") {
-									$href = substr($href, 2);
-
-								}
-								if (strpos($href, "#")) {
-									$href = substr($href, 0, strpos($href, "#"));
-
-								}
-								if (strpos($href, "?")) {
-									$href = substr($href, 0, strpos($href, "?"));
-
-								}
-								if (!in_array($base_url, $href, $c)) {
-									array_push($c, $href);
-
-									if (substr($base_url, 0, 4) == "www.") {
-									    $base[] = substr($base_url, 4);
-									}
-									
-								}
-								
-									
-							}
-
-							// fetching all href
-							foreach($doc->getElementsByTagName('a') as $a){
-
-								$href =  $a->getAttribute('href');
-
-								if (strpos($href, "#")) {
-									$href = substr($href, 0, strpos($href, "#"));
-
-								}
-								if (strpos($href, "?")) {
-									$href = substr($href, 0, strpos($href, "?"));
-								}
-								if (substr($href,0,1) == ".") {
-									$href = substr($href, 1);
-								}
-								if (substr($href,0,7) == "http://") {
-									$href = $href;
-								}
-								else if (substr($href,0,8) == "https://") {
-									$href = $href;
-								}
-								else if (substr($href,0,2) == "//") {
-									$href = substr($href, 2);
-								}
-								else if (substr($href,0,1) == "#") {
-									$href = $url;
-								}
-								else if (substr($href,0,7) == "mailto:") {
-									$href = "[".$href."]";
-								}
-								else {
-									if (substr($href, 0, 1) != "/") {
-										$href = $base_url."/".$href;
-									}
-									else {
-										$href = $base_url.$href;
-									}
-								}	
-
-								if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
-									if (substr($href, 0, 8) == "https://") {
-										$href = "https://".$href;
-									}
-									else {
-										$href = "http://".$href;
-									}
-								}		
-								if (!in_array($href, $c)) {
-									array_push($c, $href);
-
-									if (substr($base_url, 0, 4) == "www.") {
-									    $base[] = substr($base_url, 4);
-									}
-									
-
-								}
-							
-							}
-							// // fetching all image
-							foreach( $doc->getElementsByTagName('img') as $image){
-
-								$href =  $image->getAttribute('src');
-								if (substr($href,0,2) == "//") {
-									$href = substr($href, 2);
-
-								}
-								if (strpos($href, "#")) {
-									$href = substr($href, 0, strpos($href, "#"));
-
-								}
-								if (strpos($href, "?")) {
-									$href = substr($href, 0, strpos($href, "?"));
-
-								}
-								if (!in_array($href, $c)) {
-									array_push($c, $href);
-
-									if (substr($base_url, 0, 4) == "www.") {
-									    $base[] = substr($base_url, 4);
-									}
-									
-								}
-								
-							}
 
 							//fetching all script
 							foreach( $doc->getElementsByTagName('script') as $scripts){
@@ -411,7 +361,8 @@
 				<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
 				</tr>
 				";
-				foreach (array_filter($c) as $index => $page) {
+				$collected = array_unique($c);
+				foreach (array_filter($collected) as $index => $page) {
 				$i++;
 				$theDomain = get_domain($page);
 				$multipleDomain = $base[$index];
