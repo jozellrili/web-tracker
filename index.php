@@ -21,13 +21,7 @@
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
+   
 </head>
 
 <body id='form'>
@@ -147,16 +141,46 @@
 						foreach( $doc->getElementsByTagName('img') as $image){
 						  
 						    $href =  $image->getAttribute('src');
-						    if (substr($href,0,2) == "//") {
-							$href = substr($href, 2);
-							}
-							if (strpos($href, "#")) {
-							$href = substr($href, 0, strpos($href, "#"));
-
+						    if (strpos($href, "#")) {
+								$href = substr($href, 0, strpos($href, "#"));
 							}
 							if (strpos($href, "?")) {
 								$href = substr($href, 0, strpos($href, "?"));
+							}
+							if (substr($href,0,1) == ".") {
+								$href = substr($href, 1);
+							}
+							if (substr($href,0,7) == "http://") {
+								$href = $href;
+							}
+							else if (substr($href,0,8) == "https://") {
+								$href = $href;
+							}
+							else if (substr($href,0,2) == "//") {
+								$href = substr($href, 2);
+							}
+							else if (substr($href,0,1) == "#") {
+								$href = $url;
+							}
+							else if (substr($href,0,7) == "mailto:") {
+								$href = "[".$href."]";
+							}
+							else {
+								if (substr($href, 0, 1) != "/") {
+									$href = $base_url."/".$href;
+								}
+								else {
+									$href = $base_url.$href;
+									}
+							}	
 
+							if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
+								if (substr($href, 0, 8) == "https://") {
+									$href = "https://".$href;
+								}
+								else {
+									$href = "http://".$href;
+								}
 							}
 
 						  	if (!in_array($href, $c)) {
@@ -242,16 +266,46 @@
 							
 							$href = $iframe->getAttribute('src');
 
-							if (substr($href,0,2) == "//") {
-							$href = substr($href, 2);
-							}
 							if (strpos($href, "#")) {
-							$href = substr($href, 0, strpos($href, "#"));
-
+								$href = substr($href, 0, strpos($href, "#"));
 							}
 							if (strpos($href, "?")) {
 								$href = substr($href, 0, strpos($href, "?"));
+							}
+							if (substr($href,0,1) == ".") {
+								$href = substr($href, 1);
+							}
+							if (substr($href,0,7) == "http://") {
+								$href = $href;
+							}
+							else if (substr($href,0,8) == "https://") {
+								$href = $href;
+							}
+							else if (substr($href,0,2) == "//") {
+								$href = substr($href, 2);
+							}
+							else if (substr($href,0,1) == "#") {
+								$href = $url;
+							}
+							else if (substr($href,0,7) == "mailto:") {
+								$href = "[".$href."]";
+							}
+							else {
+								if (substr($href, 0, 1) != "/") {
+									$href = $base_url."/".$href;
+								}
+								else {
+									$href = $base_url.$href;
+									}
+							}	
 
+							if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
+								if (substr($href, 0, 8) == "https://") {
+									$href = "https://".$href;
+								}
+								else {
+									$href = "http://".$href;
+								}
 							}
 
 						     if (!in_array($href, $c)) {
@@ -265,16 +319,46 @@
 							
 						    $href =  $scripts->getAttribute('src');
 						   
-							if (substr($href,0,2) == "//") {
-							$href = substr($href, 2);
-							}
 							if (strpos($href, "#")) {
-							$href = substr($href, 0, strpos($href, "#"));
-
+								$href = substr($href, 0, strpos($href, "#"));
 							}
 							if (strpos($href, "?")) {
 								$href = substr($href, 0, strpos($href, "?"));
+							}
+							if (substr($href,0,1) == ".") {
+								$href = substr($href, 1);
+							}
+							if (substr($href,0,7) == "http://") {
+								$href = $href;
+							}
+							else if (substr($href,0,8) == "https://") {
+								$href = $href;
+							}
+							else if (substr($href,0,2) == "//") {
+								$href = substr($href, 2);
+							}
+							else if (substr($href,0,1) == "#") {
+								$href = $url;
+							}
+							else if (substr($href,0,7) == "mailto:") {
+								$href = "[".$href."]";
+							}
+							else {
+								if (substr($href, 0, 1) != "/") {
+									$href = $base_url."/".$href;
+								}
+								else {
+									$href = $base_url.$href;
+									}
+							}	
 
+							if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
+								if (substr($href, 0, 8) == "https://") {
+									$href = "https://".$href;
+								}
+								else {
+									$href = "http://".$href;
+								}
 							}
 
 
