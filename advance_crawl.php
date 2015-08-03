@@ -99,7 +99,7 @@
 
 					function urlLooper($urls) {
 
-						global $l, $c,$base;
+						global $l, $c, $base;
 						$doc = new DOMDocument();
 						foreach ($urls as $url) {
 							$doc->loadHTMLFile($url);
@@ -448,6 +448,16 @@
 				<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
 				</tr>
 				";
+
+				$query= "SELECT * FROM keywords";
+					$result = $conn->query($query);
+
+					if($result->num_rows > 0) {
+						while($row = $result->fetch_assoc()) {
+							$keys[] = $row['keyword'];
+						}
+					}
+
 				$collected = array_unique($c);
 				foreach (array_filter($collected) as $index => $page) {
 				$i++;
@@ -471,10 +481,11 @@
 
 
 
-				$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
+				//$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
 				$exceptions = array('fonts','favicon','favi');
 
-				if (strposa($page, $array) || ($match == "Potential Tracker!")) {
+				//|| ($match == "Potential Tracker!")
+				if (strposa($page, $keys)) {
 					$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 					$result = $conn->query($sql);
 

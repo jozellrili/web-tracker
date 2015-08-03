@@ -475,6 +475,16 @@
 						<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
 						</tr>
 						";
+
+						$query= "SELECT * FROM keywords";
+							$result = $conn->query($query);
+
+							if($result->num_rows > 0) {
+								while($row = $result->fetch_assoc()) {
+									$keys[] = $row['keyword'];
+								}
+							}
+
 						$collected = array_unique($c);
 						foreach (array_filter($collected) as $index => $page) {
 						$i++;
@@ -497,7 +507,7 @@
 							}
 
 
-							if (strposa($page, $array) || ($match == "Potential Tracker!")) {
+							if (strposa($page, $keys) || ($match == "Potential Tracker!")) {
 								$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 								$result = $conn->query($sql);
 
