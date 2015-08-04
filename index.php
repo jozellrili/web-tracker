@@ -432,20 +432,6 @@
 						}
 					}
 
-					function classification($domain,$url) {
-		
-						if (preg_match("/\b$domain\b/i", $url, $match)) {
-			  				$status = "Safe URL";
-			  			}
-			  				
-						else {
-							$status = "Potential Tracker!";
-						}
-
-						return $status;
-
-					}
-
 
 					function strposa($haystack, $needles=array()) {
 				        $chr = array();
@@ -460,7 +446,6 @@
 
 				     $links = array_unique($l);
 				     foreach ($links as $link) {
-				     	//echo $link."<br />";
 				     	get_links($link);
 				     }
 
@@ -475,7 +460,7 @@
 						<th>#</th><th>REQUESTED PAGE(DOMAIN NAME)</th><th>TYPE</th><th>URL</th><th>STATUS</th>
 						</tr>
 						";
-
+						//get keywords from db for function strposa
 						$query= "SELECT * FROM keywords";
 							$result = $conn->query($query);
 
@@ -489,10 +474,8 @@
 						foreach (array_filter($collected) as $index => $page) {
 						$i++;
 						$theDomain = get_domain($page);
-						$match = classification($theHost,$page);
 						$type = get_content_type($page);
 						$exceptions = array('fonts','favi','favicon');	
-						$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
 
 							//strip http/https before inserting into the database
 							if ((substr($page,0,7) == "http://")) {
@@ -507,15 +490,15 @@
 							}
 
 
-							if (strposa($page, $keys) || ($match == "Potential Tracker!")) {
-								$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
+							if (strposa($page, $keys)) {
+								$sql = "SELECT * FROM tracker_test WHERE url = '".$page."' ";
 								$result = $conn->query($sql);
 
 									if ($result->num_rows > 0) {
-										$conn->query("UPDATE tracker_list SET requested_page = '".$theHost."', domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
+										$conn->query("UPDATE tracker_test SET requested_page = '".$theHost."', domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
 									} else {
 
-										$conn->query("INSERT INTO tracker_list (requested_page, domain, url, type) VALUES ('".$theHost."', '".$theDomain."', '".$page."', '".$type."')");
+										$conn->query("INSERT INTO tracker_test (requested_page, domain, url, type) VALUES ('".$theHost."', '".$theDomain."', '".$page."', '".$type."')");
 									}
 								$icon = "fa fa-exclamation-triangle fa-lg";
 								$color = "red";
@@ -528,13 +511,13 @@
 							if(strposa($page,$exceptions)) {
 								foreach($exceptions as $e) {
 
-									$query= "SELECT * FROM tracker_list WHERE url LIKE '%$e%' ";
+									$query= "SELECT * FROM tracker_test WHERE url LIKE '%$e%' ";
 									$result = $conn->query($query);
 
 									if($result->num_rows > 0) {
 										while($row = $result->fetch_assoc()) {
 											$a = $row['url'];
-											$conn->query("DELETE FROM tracker_list WHERE url = '".$a."' ");
+											$conn->query("DELETE FROM tracker_test WHERE url = '".$a."' ");
 										}
 									}
 								}
@@ -543,7 +526,6 @@
 								$color = "green";
 
 							} 
-							//echo $page."--".$color."<br />";
 
 						echo "
 						<tr>
