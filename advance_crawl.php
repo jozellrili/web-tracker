@@ -90,18 +90,36 @@
 
 					if(isset($_POST['submit1'])) {
 						$file = $_FILES["file"]["tmp_name"] ;
-
 						$i = 0;
 						$url = file($file, FILE_IGNORE_NEW_LINES| FILE_SKIP_EMPTY_LINES);
 						$c = array();
 						$l = array();
-
+						
 
 					function urlLooper($urls) {
 
 						global $l, $c, $base;
 						$doc = new DOMDocument();
 						foreach ($urls as $url) {
+							if (substr($url,0,7) != "http://") {
+								if (substr($url,0,4) != "www.") {
+									$url = "www.".$url;
+								}
+								if (substr($url,0,4) == "www."){
+									$url = "http://".$url;
+								}
+
+							}
+							if (substr($url, 0,11) != "http://www."){
+								$url = str_replace("http://", "http://www.", $url);
+										
+							}
+							else {
+								$url = $url ;
+							}
+							
+
+									
 							$doc->loadHTMLFile($url);
 							$base_url = parse_url($url, PHP_URL_HOST);
 
@@ -435,7 +453,7 @@
 					
 
 				$links = array_unique($l);
-			    foreach ($links as $link) {
+			    foreach (array_filter($links) as $link) {
 			     	get_links($link);
 			    }
 							
