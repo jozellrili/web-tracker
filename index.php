@@ -117,18 +117,47 @@
 						foreach( $doc->getElementsByTagName('link') as $style){
 					   
 					    	$href =  $style->getAttribute('href');
-					    	if (substr($href,0,2) == "//") {
-							$href = substr($href, 2);
+					    	if (strpos($href, "#")) {
+								$href = substr($href, 0, strpos($href, "#"));
 							}
-							if (strpos($href, "#")) {
-							$href = substr($href, 0, strpos($href, "#"));
-
-							}
-
 							if (strpos($href, "?")) {
 								$href = substr($href, 0, strpos($href, "?"));
+							}
+							if (substr($href,0,1) == ".") {
+								$href = substr($href, 1);
+							}
+							if (substr($href,0,7) == "http://") {
+								$href = $href;
+							}
+							else if (substr($href,0,8) == "https://") {
+								$href = $href;
+							}
+							else if (substr($href,0,2) == "//") {
+								$href = substr($href, 2);
+							}
+							else if (substr($href,0,1) == "#") {
+								$href = $url;
+							}
+							else if (substr($href,0,7) == "mailto:") {
+								$href = "[".$href."]";
+							}
+							else {
+								if (substr($href, 0, 1) != "/") {
+									$href = $base_url."/".$href;
+								}
+								else {
+									$href = $base_url.$href;
+									}
+							}	
 
-							}							
+							if (substr($href, 0, 7) != "http://" && substr($href, 0, 8) != "https://" && substr($href, 0, 1) != "[") {
+								if (substr($href, 0, 8) == "https://") {
+									$href = "https://".$href;
+								}
+								else {
+									$href = "http://".$href;
+								}
+							}											
 
 					  	 if (!in_array($href, $c)) {
 							array_push($c, $href);
