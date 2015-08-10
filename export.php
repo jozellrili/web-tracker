@@ -40,7 +40,7 @@ $output .="\n";
 
 // Download the file
 
-$filename = "Tracker_List.csv";
+$filename = "TrackerList_".date('m-d-Y_hia').".csv";
 header('Content-type: application/csv');
 header('Content-Disposition: attachment; filename='.$filename);
 
