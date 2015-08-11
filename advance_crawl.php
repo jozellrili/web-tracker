@@ -497,11 +497,6 @@
 					}
 				}
 
-
-
-				//$array  = array('tracker', 'stats', 'analytics', 'omniture', 'tracking', 'tags');
-				$exceptions = array('fonts','favicon','favi');
-
 				//|| ($match == "Potential Tracker!")
 				if (strposa($page, $keys)) {
 					$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
@@ -511,7 +506,7 @@
 							$conn->query("UPDATE tracker_list SET requested_page = '".$multipleDomain."', domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
 						} else {
 
-							$conn->query("INSERT INTO tracker_list (requested_page, domain, url, type) VALUES ('".$multipleDomain."', '".$theDomain."', '".$page."', '".$type."')");
+							$conn->query("INSERT INTO tracker_test (requested_page, domain, url, type) VALUES ('".$multipleDomain."', '".$theDomain."', '".$page."', '".$type."')");
 						}
 					$icon = "fa fa-exclamation-triangle fa-lg";
 					$color = "red";
@@ -522,24 +517,24 @@
 					$color = "green";
 				}
 				
-				if(strposa($page,$exceptions)) {
-					foreach($exceptions as $e) {
+				// if(strposa($page,$exceptions)) {
+				// 	foreach($exceptions as $e) {
 
-						$query= "SELECT * FROM tracker_list WHERE url LIKE '%$e%' ";
-						$result = $conn->query($query);
+				// 		$query= "SELECT * FROM tracker_list WHERE url LIKE '%$e%' ";
+				// 		$result = $conn->query($query);
 
-						if($result->num_rows > 0) {
-							while($row = $result->fetch_assoc()) {
-								$a = $row['url'];
-								$conn->query("DELETE FROM tracker_list WHERE url = '".$a."' ");
-							}
-						}
-					}
+				// 		if($result->num_rows > 0) {
+				// 			while($row = $result->fetch_assoc()) {
+				// 				$a = $row['url'];
+				// 				$conn->query("DELETE FROM tracker_list WHERE url = '".$a."' ");
+				// 			}
+				// 		}
+				// 	}
 
-					$icon = "fa fa-check-square fa-lg";
-					$color = "green";
+				// 	$icon = "fa fa-check-square fa-lg";
+				// 	$color = "green";
 
-				} 
+				// } 
 					
 					echo "
 					<tr>
