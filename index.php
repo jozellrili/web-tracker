@@ -567,11 +567,11 @@
 						if (empty($collected)) {
 							echo '
 								<script language="javascript">
-								alert("Mak sure you input correct URL")
+								alert("No links catched!\\nMake sure you input correct URL")
 								</script>'
 							;	
 						}
-						
+
 						echo "
 						</tbody>
 						</table>
