@@ -548,7 +548,8 @@
 							<script language="javascript">
 							alert("No Links Catched!\\nMake sure you input correct URL")
 							</script>'
-						;	
+						;
+						header("Refresh:0");	
 				}
 					echo "
 					</tbody>

@@ -570,6 +570,7 @@
 								alert("No links catched!\\nMake sure you input correct URL")
 								</script>'
 							;	
+							header("Refresh:0");
 						}
 
 						echo "
