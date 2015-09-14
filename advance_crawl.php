@@ -542,6 +542,14 @@
 					</tr>";
 
 				}
+
+				if (empty($collected)) {
+						echo '
+							<script language="javascript">
+							alert("Mak sure you input correct URL")
+							</script>'
+						;	
+				}
 					echo "
 					</tbody>
 					</table>

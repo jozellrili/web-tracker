@@ -500,6 +500,7 @@
 							}
 
 						$collected = array_unique($c);
+
 						foreach (array_filter($collected) as $index => $page) {
 						$i++;
 						$theDomain = get_domain($page);
@@ -563,6 +564,14 @@
 						</div>
 						";
 						}
+						if (empty($collected)) {
+							echo '
+								<script language="javascript">
+								alert("Mak sure you input correct URL")
+								</script>'
+							;	
+						}
+						
 						echo "
 						</tbody>
 						</table>
