@@ -442,15 +442,19 @@
 
 
 					function strposa($haystack, $needles=array()) {
-				        $chr = array();
-					        foreach($needles as $needle) {
-					                $res = stripos($haystack, $needle);
-					                if ($res !== false) $chr[$needle] = $res;
+					$chr = array();
+					    foreach($needles as $needle) {
+					        $res = stripos($haystack, $needle);
+					        if ($res !== false)
+					        {
+					            $chr[$needle] = $res;
+					            $string_exist = $needle; break;
 					        }
-				        if(empty($chr)) return false;
-				        return min($chr);
-				     }
-					
+					    }
+					    if(empty($chr)) return false; 
+					    return $string_exist;
+					}
+
 
 				$links = array_unique($l);
 			    foreach (array_filter($links) as $link) {
@@ -483,6 +487,7 @@
 				$multipleDomain = $base[$index];
 				$match = classification($multipleDomain,$page);
 				$type = get_content_type($page);
+				$category = strposa($page, $keys);
 
 
 				//strip http/https before inserting into the database
@@ -499,14 +504,26 @@
 
 				//|| ($match == "Potential Tracker!")
 				if (strposa($page, $keys)) {
+
+					$query = "SELECT id, category FROM keywords WHERE keyword = '".$category."' ";
+					$result = $conn->query($query);
+
+						if($result->num_rows > 0) {
+
+							$row = $result->fetch_assoc();
+							$cat[0] = $row['id'];
+							$cat[1] = $row['category'];
+
+						}
+
 					$sql = "SELECT * FROM tracker_list WHERE url = '".$page."' ";
 					$result = $conn->query($sql);
 
 						if ($result->num_rows > 0) {
-							$conn->query("UPDATE tracker_list SET requested_page = '".$multipleDomain."', domain = '".$theDomain."', url = '".$page."', type = '".$type."'  WHERE url = '".$page."' ");
+							$conn->query("UPDATE tracker_list SET requested_page = '".$multipleDomain."', domain = '".$theDomain."', url = '".$page."', type = '".$type."', category = '".$cat[1]."'  WHERE url = '".$page."' ");
 						} else {
 
-							$conn->query("INSERT INTO tracker_test (requested_page, domain, url, type) VALUES ('".$multipleDomain."', '".$theDomain."', '".$page."', '".$type."')");
+							$conn->query("INSERT INTO tracker_test (requested_page, domain, url, type, category) VALUES ('".$multipleDomain."', '".$theDomain."', '".$page."', '".$type."', '".$cat[1]."' )");
 						}
 					$icon = "fa fa-exclamation-triangle fa-lg";
 					$color = "red";
