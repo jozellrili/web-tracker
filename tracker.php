@@ -14,6 +14,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
+    <link rel="icon" type="image/png" href="img/logo1.png" size ="16x16">
     <link href="css/web_crawler.css" rel="stylesheet">
 
     <!-- column cursor -->
