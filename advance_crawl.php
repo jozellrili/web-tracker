@@ -11,6 +11,7 @@
     <title>Redmorph</title>
 
     <!-- Bootstrap Core CSS -->
+    <link rel="icon" type="image/png" href="img/logo1.png" size ="16x16">
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
