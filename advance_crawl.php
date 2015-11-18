@@ -524,14 +524,14 @@ include("header.php");
 
 				}
 
-				if (empty($collected)) {
-						echo '
-							<script language="javascript">
-							alert("No Links Catched!\\nMake sure you input correct URL")
-							</script>'
-						;
-						header("Refresh:0");	
-				}
+				// if (empty($collected)) {
+				// 		echo '
+				// 			<script language="javascript">
+				// 			alert("No Links Catched!\\nMake sure you input correct URL")
+				// 			</script>'
+				// 		;
+				// 		header("Refresh:0");	
+				// }
 					echo "
 					</tbody>
 					</table>
