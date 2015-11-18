@@ -55,7 +55,7 @@ include("header.php");
    
            		</div>
             </div>
-            	<?php
+            	<?php				
             	set_time_limit(0);
 				include('db_connection.php');
 
